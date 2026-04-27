@@ -1,0 +1,9 @@
+data/uploads/
+data/cache/
+data/chroma/
+.env.local
+__pycache__/
+*.pyc
+.venv/
+.uv/
+.streamlit/cache/
