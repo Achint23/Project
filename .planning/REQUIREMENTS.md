@@ -44,10 +44,10 @@ Requirements for the POC release. Each maps to roadmap phases.
 ### Q&A
 
 - [ ] **QA-01**: User can ask natural-language questions against the indexed document corpus through a chat UI
-- [ ] **QA-02**: Answers are generated using a grounded prompt that instructs the model to answer only from retrieved context and respond "I don't know" otherwise
+- [x] **QA-02**: Answers are generated using a grounded prompt that instructs the model to answer only from retrieved context and respond "I don't know" otherwise
 - [ ] **QA-03**: Each answer renders inline citations (`[chunk_id]`) with expandable source-chunk previews showing page number and original text
-- [ ] **QA-04**: A post-hoc check validates every cited `chunk_id` against the retrieval log and flags hallucinated citations in the UI
-- [ ] **QA-05**: Retrieved chunks are reordered so the highest-scored chunk appears first AND last in the prompt (anti "lost in the middle")
+- [x] **QA-04**: A post-hoc check validates every cited `chunk_id` against the retrieval log and flags hallucinated citations in the UI
+- [x] **QA-05**: Retrieved chunks are reordered so the highest-scored chunk appears first AND last in the prompt (anti "lost in the middle")
 
 ### Summarization
 
@@ -141,10 +141,10 @@ Deferred — explicitly out of scope for the POC, tracked for future.
 | IDX-05 | Phase 3: Ingestion Pipeline + Upload UI | Complete |
 | IDX-06 | Phase 3: Ingestion Pipeline + Upload UI | Complete |
 | QA-01 | Phase 4: Q&A Retrieval + Chat with Citations | Pending |
-| QA-02 | Phase 4: Q&A Retrieval + Chat with Citations | Pending |
+| QA-02 | Phase 4: Q&A Retrieval + Chat with Citations | Complete |
 | QA-03 | Phase 4: Q&A Retrieval + Chat with Citations | Pending |
-| QA-04 | Phase 4: Q&A Retrieval + Chat with Citations | Pending |
-| QA-05 | Phase 4: Q&A Retrieval + Chat with Citations | Pending |
+| QA-04 | Phase 4: Q&A Retrieval + Chat with Citations | Complete |
+| QA-05 | Phase 4: Q&A Retrieval + Chat with Citations | Complete |
 | SUM-01 | Phase 5: Summarization + Graph Extraction | Pending |
 | SUM-02 | Phase 5: Summarization + Graph Extraction | Pending |
 | GRAPH-01 | Phase 5: Summarization + Graph Extraction | Pending |
