@@ -15,11 +15,11 @@
 ## Stack (locked)
 
 - **Language:** Python 3.10–3.12 (CPU-only)
-- **Packaging:** `uv` + `Makefile` (≤ 3 commands from clone to running demo)
+- **Packaging:** `uv` + `tasks.ps1` (≤ 3 commands from clone to running demo)
 - **UI:** Streamlit
 - **RAG orchestration:** LlamaIndex (`llama-index-core ^0.12`)
 - **PDF extraction:** PyMuPDF (`^1.24`)
-- **OCR:** EasyOCR (`^1.7.2`), English-only, CPU, weights pre-downloaded in `make setup`
+- **OCR:** EasyOCR (`^1.7.2`), English-only, CPU, weights pre-downloaded in `.\tasks.ps1 setup`
 - **Vector store:** ChromaDB (`^0.5`) `PersistentClient`, telemetry off, single collection with `doc_id` metadata
 - **LLM client:** `openai ^1.50` SDK against NVIDIA NIM (`https://integrate.api.nvidia.com/v1`)
 - **Default models:** `meta/llama-3.1-70b-instruct` (chat), `nvidia/nv-embedqa-e5-v5` (embeddings); routing target via `NVIDIA_ROUTE_MODEL`

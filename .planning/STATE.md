@@ -34,10 +34,10 @@
 
 ### Key Decisions
 
-- Python 3.10–3.12 + uv + Makefile chosen for the ≤3-command-setup constraint
+- Python 3.10–3.12 + uv + tasks.ps1 (PowerShell) chosen for the ≤3-command-setup constraint
 - LlamaIndex over LangChain (lighter import surface, RAG-native)
 - ChromaDB `PersistentClient` (embedded, telemetry off, single collection with `doc_id` metadata)
-- EasyOCR (pure-Python, CPU, English-only) with weights pre-downloaded during `make setup`
+- EasyOCR (pure-Python, CPU, English-only) with weights pre-downloaded during `.\tasks.ps1 setup`
 - PyMuPDF for text+layout extraction (AGPL acceptable for POC)
 - `openai` SDK against NIM's OpenAI-compatible endpoint (one client for chat + embeddings)
 - Streamlit `^1.40` UI with `@st.cache_resource` for heavy singletons
