@@ -104,7 +104,13 @@ Plans:
   3. Output is validated against a Pydantic schema; on parse failure the system performs a one-shot self-correction retry.
   4. Extracted graph data is rendered both as a readable table and as a node/edge or mermaid process-flow view in the UI.
   5. Entity duplicates are merged via `rapidfuzz` fuzzy matching with a documented threshold.
-**Plans**: TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Dependencies, VectorStore extension, prompt templates, and summarization pipeline
+- [ ] 05-02-PLAN.md — Graph extraction pipeline with Pydantic validation, entity dedup, self-correction
+- [ ] 05-03-PLAN.md — Summary and Graph view UI partials with tab-based app layout
+
 **UI hint**: yes
 **Research during planning**: yes — flagged in SUMMARY.md (JSON-mode/few-shot prompt design and fuzzy-merge thresholds need a focused research pass)
 
