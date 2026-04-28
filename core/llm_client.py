@@ -47,14 +47,23 @@ class NIMClient:
             lambda: self._client.chat.completions.create(**kwargs)
         )
 
-    def embed(self, texts: list[str], model: str | None = None) -> list[list[float]]:
-        """Batch embedding calls at EMBED_BATCH_SIZE chunks per request with retry."""
+    def embed(self, texts: list[str], model: str | None = None, input_type: str = "passage") -> list[list[float]]:
+        """Batch embedding calls at EMBED_BATCH_SIZE chunks per request with retry.
+
+        Args:
+            texts: List of texts to embed.
+            model: Override embedding model name.
+            input_type: 'passage' for indexing, 'query' for search queries.
+                        Required by asymmetric models like nv-embedqa-e5-v5.
+        """
         model = model or self._settings.nvidia_embed_model
         all_embeddings: list[list[float]] = []
         for i in range(0, len(texts), self.EMBED_BATCH_SIZE):
             batch = texts[i : i + self.EMBED_BATCH_SIZE]
             response = self._call_with_retry(
-                lambda b=batch: self._client.embeddings.create(model=model, input=b)
+                lambda b=batch: self._client.embeddings.create(
+                    model=model, input=b, extra_body={"input_type": input_type}
+                )
             )
             all_embeddings.extend([item.embedding for item in response.data])
         return all_embeddings

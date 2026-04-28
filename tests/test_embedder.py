@@ -18,7 +18,7 @@ class TestEmbedder:
         embedder, mock_nim = self._make_embedder()
         mock_nim.embed.return_value = [[0.1, 0.2, 0.3]]
         embedder.embed(["hello"])
-        mock_nim.embed.assert_called_once_with(["hello"], model="nvidia/nv-embedqa-e5-v5")
+        mock_nim.embed.assert_called_once_with(["hello"], model="nvidia/nv-embedqa-e5-v5", input_type="passage")
 
     def test_embedder_embed_delegates(self):
         """embed() returns whatever NIMClient.embed returns."""
@@ -34,6 +34,7 @@ class TestEmbedder:
         mock_nim.embed.return_value = [[0.5, 0.6, 0.7]]
         result = embedder.embed_single("test")
         assert result == [0.5, 0.6, 0.7]
+        mock_nim.embed.assert_called_once_with(["test"], model="nvidia/nv-embedqa-e5-v5", input_type="query")
 
     def test_embedder_dim(self):
         """Embedder dim is 1024 for nv-embedqa-e5-v5."""

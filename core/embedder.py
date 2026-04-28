@@ -13,10 +13,18 @@ class Embedder:
         self.model = self._settings.nvidia_embed_model
         self.dim = 1024  # nv-embedqa-e5-v5 output dimension
 
-    def embed(self, texts: list[str]) -> list[list[float]]:
-        """Embed a batch of texts. Retry/batching handled by NIMClient."""
-        return self._nim_client.embed(texts, model=self.model)
+    def embed(self, texts: list[str], input_type: str = "passage") -> list[list[float]]:
+        """Embed a batch of texts. Retry/batching handled by NIMClient.
 
-    def embed_single(self, text: str) -> list[float]:
-        """Embed a single text and return its vector."""
-        return self.embed([text])[0]
+        Args:
+            texts: List of texts to embed.
+            input_type: 'passage' for indexing, 'query' for search queries.
+        """
+        return self._nim_client.embed(texts, model=self.model, input_type=input_type)
+
+    def embed_single(self, text: str, input_type: str = "query") -> list[float]:
+        """Embed a single text and return its vector.
+
+        Default input_type is 'query' since single embeds are typically search queries.
+        """
+        return self.embed([text], input_type=input_type)[0]
