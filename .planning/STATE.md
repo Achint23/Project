@@ -92,12 +92,12 @@
 ### Last Session
 
 - **Date:** 2026-04-28
-- **Activity:** Executed Phase 5 Plan 02 — Graph Extraction Pipeline. Created pipelines/graph.py with Pydantic-validated LLM output, one-shot self-correction, rapidfuzz entity dedup (threshold 85), and field aliases bridging prompt template schema. 12 new tests, 112 total passing.
-- **Next:** Execute Phase 5 Plan 03 (UI integration: summary view + graph view)
+- **Activity:** Executed Phase 5 — Summarization + Graph Extraction. All 3 plans complete: (1) VectorStore.get_all_by_doc, prompt templates, summarization pipeline with direct/map-reduce routing; (2) Graph extraction pipeline with Pydantic validation, entity dedup, self-correction; (3) Summary/Graph view UI partials with tab-based app layout. 133 tests passing.
+- **Next:** `/gsd-plan-phase 6` to plan Phase 6 (Model Routing + Side-by-Side Comparison)
 
 ### Resume Notes
 
-To resume: run `/gsd-progress` for status, then execute Phase 5 Plan 03. Plans 01 (summarization) and 02 (graph extraction) complete. UI integration next.
+To resume: run `/gsd-progress` for status, then `/gsd-plan-phase 6` to plan Phase 6. Phase 5 complete with full summarization + graph extraction pipeline and UI.
 
 ---
 *State initialized: 2026-04-28*

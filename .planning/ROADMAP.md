@@ -144,11 +144,11 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Skeleton + NIM Client | 0/0 | Not started | - |
-| 2. Extraction, OCR, Chunking & Vector Store | 0/0 | Not started | - |
-| 3. Ingestion Pipeline + Upload UI | 0/0 | Not started | - |
-| 4. Q&A Retrieval + Chat with Citations | 0/0 | Not started | - |
-| 5. Summarization + Graph Extraction | 0/0 | Not started | - |
+| 1. Skeleton + NIM Client | 3/3 | Complete | 2026-04-28 |
+| 2. Extraction, OCR, Chunking & Vector Store | 3/3 | Complete | 2026-04-28 |
+| 3. Ingestion Pipeline + Upload UI | 3/3 | Complete | 2026-04-28 |
+| 4. Q&A Retrieval + Chat with Citations | 3/3 | Complete | 2026-04-28 |
+| 5. Summarization + Graph Extraction | 3/3 | Complete | 2026-04-28 |
 | 6. Model Routing + Side-by-Side Comparison | 0/0 | Not started | - |
 | 7. Demo Polish & End-to-End UX | 0/0 | Not started | - |
 
@@ -163,4 +163,4 @@ Plans:
 
 ---
 *Roadmap created: 2026-04-28*
-*Last updated: 2026-04-28 after initial creation*
+*Last updated: 2026-04-28 after Phase 5 completion*
