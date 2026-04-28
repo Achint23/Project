@@ -11,7 +11,7 @@
 - [x] **Phase 2: Extraction, OCR, Chunking & Vector Store** — Text-first PDF extraction with OCR fallback, structure-aware chunker, and ChromaDB persistence with embedding-model metadata
 - [x] **Phase 3: Ingestion Pipeline + Upload UI** — End-to-end ingest pipeline with content-hash dedupe and a Streamlit upload + document-list UI
 - [x] **Phase 4: Q&A Retrieval + Chat with Citations** — Grounded chat over indexed corpus with inline `[chunk_id]` citations and hallucination flagging
-- [ ] **Phase 5: Summarization + Graph Extraction** — Map-reduce summaries plus prompt-based entity/relationship/process-step extraction with Pydantic validation and node-edge view
+- [x] **Phase 5: Summarization + Graph Extraction** — Map-reduce summaries plus prompt-based entity/relationship/process-step extraction with Pydantic validation and node-edge view
 - [ ] **Phase 6: Model Routing + Side-by-Side Comparison** — Pure-function router, manual/auto toggle, and parallel direct-vs-routed comparison panel
 - [ ] **Phase 7: Demo Polish & End-to-End UX** — Unified single-session demo flow, README quickstart, and demo-readiness checks
 
@@ -107,9 +107,9 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — Dependencies, VectorStore extension, prompt templates, and summarization pipeline
-- [ ] 05-02-PLAN.md — Graph extraction pipeline with Pydantic validation, entity dedup, self-correction
-- [ ] 05-03-PLAN.md — Summary and Graph view UI partials with tab-based app layout
+- [x] 05-01-PLAN.md — Dependencies, VectorStore extension, prompt templates, and summarization pipeline
+- [x] 05-02-PLAN.md — Graph extraction pipeline with Pydantic validation, entity dedup, self-correction
+- [x] 05-03-PLAN.md — Summary and Graph view UI partials with tab-based app layout
 
 **UI hint**: yes
 **Research during planning**: yes — flagged in SUMMARY.md (JSON-mode/few-shot prompt design and fuzzy-merge thresholds need a focused research pass)

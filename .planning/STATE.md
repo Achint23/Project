@@ -1,6 +1,6 @@
 # Project State: DocBot
 
-**Last updated:** 2026-04-28 (Phase 4 complete)
+**Last updated:** 2026-04-28 (Phase 5 complete)
 
 ## Project Reference
 
@@ -14,20 +14,20 @@
 ## Current Position
 
 - **Milestone:** v1 POC
-- **Current phase:** Phase 5 — Summarization + Graph Extraction
-- **Current plan:** Plan 02 complete; ready for Plan 03
-- **Status:** Phase 5 in progress — Plan 02 (graph extraction pipeline) complete
-- **Progress:** 4/7 phases complete (Phase 5: 2 plans done)
+- **Current phase:** Phase 5 — Summarization + Graph Extraction (COMPLETE)
+- **Current plan:** Plan 03 complete; Phase 5 done — ready for Phase 6
+- **Status:** Phase 5 complete — all 3 plans done (summarize pipeline, graph pipeline, UI views)
+- **Progress:** 5/7 phases complete
 
 ```
-[████░░░] 4/7 phases complete
+[█████░░] 5/7 phases complete
 ```
 
 ## Performance Metrics
 
-- Phases completed: 4
-- Plans completed: 14
-- Requirements validated: 29/42 (SETUP-01, SETUP-02, SETUP-03, SETUP-04, SETUP-05, LLM-01, LLM-02, LLM-03, LLM-04, LLM-05, INGEST-01, INGEST-02, INGEST-03, INGEST-04, INGEST-05, INGEST-06, IDX-01, IDX-02, IDX-03, IDX-04, IDX-05, IDX-06, UX-03, QA-01, QA-02, QA-03, QA-04, QA-05, UX-02)
+- Phases completed: 5
+- Plans completed: 15
+- Requirements validated: 35/42 (SETUP-01, SETUP-02, SETUP-03, SETUP-04, SETUP-05, LLM-01, LLM-02, LLM-03, LLM-04, LLM-05, INGEST-01, INGEST-02, INGEST-03, INGEST-04, INGEST-05, INGEST-06, IDX-01, IDX-02, IDX-03, IDX-04, IDX-05, IDX-06, UX-03, QA-01, QA-02, QA-03, QA-04, QA-05, UX-02, SUM-01, SUM-02, GRAPH-01, GRAPH-02, GRAPH-03, GRAPH-04)
 - Requirements invalidated: 0
 
 ## Accumulated Context
@@ -66,6 +66,10 @@
 - Pydantic field aliases (populate_by_name=True) bridge prompt template JSON keys to plan model names
 - DEDUP_THRESHOLD=85 for entity fuzzy matching via rapidfuzz token_sort_ratio
 - Longer entity name kept as canonical during dedup merge
+- APITimeoutError except clause before APIConnectionError — subclass ordering in openai SDK
+- st.tabs for Chat/Summary/Graph layout — sidebar and upload remain above tabs
+- streamlit-agraph for interactive entity-relationship graph with type-based color map
+- Native mermaid via st.markdown for process-step flowchart rendering
 
 ### Open Todos
 
