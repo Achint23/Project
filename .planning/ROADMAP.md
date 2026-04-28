@@ -129,8 +129,8 @@ Plans:
 **Research during planning**: yes — flagged in SUMMARY.md (small-model selection on NVIDIA catalog and free-tier parallel-call behavior need a quick spike)
 
 Plans:
-- [ ] 06-01-PLAN.md — Router module + pipeline metadata extension
-- [ ] 06-02-PLAN.md — UI integration + comparison panel with parallel execution
+- [x] 06-01-PLAN.md — Router module + pipeline metadata extension
+- [x] 06-02-PLAN.md — UI integration + comparison panel with parallel execution
 
 ### Phase 7: Demo Polish & End-to-End UX
 **Goal**: A presenter can walk through load → process → ask → summarize → extract graph → compare routing in a single browser session, guided by a README quickstart, on a fresh machine.
@@ -153,7 +153,7 @@ Plans:
 | 3. Ingestion Pipeline + Upload UI | 3/3 | Complete | 2026-04-28 |
 | 4. Q&A Retrieval + Chat with Citations | 3/3 | Complete | 2026-04-28 |
 | 5. Summarization + Graph Extraction | 3/3 | Complete | 2026-04-28 |
-| 6. Model Routing + Side-by-Side Comparison | 0/2 | Planned | - |
+| 6. Model Routing + Side-by-Side Comparison | 2/2 | Complete | 2026-04-28 |
 | 7. Demo Polish & End-to-End UX | 0/0 | Not started | - |
 
 ## Coverage
@@ -167,4 +167,4 @@ Plans:
 
 ---
 *Roadmap created: 2026-04-28*
-*Last updated: 2026-04-28 after Phase 5 completion*
+*Last updated: 2026-04-28 after Phase 6 completion*

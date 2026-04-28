@@ -1,6 +1,6 @@
 # Project State: DocBot
 
-**Last updated:** 2026-04-28 (Phase 5 complete)
+**Last updated:** 2026-04-28 (Phase 6 complete)
 
 ## Project Reference
 
@@ -9,25 +9,25 @@
 - **Requirements doc:** `.planning/REQUIREMENTS.md`
 - **Roadmap doc:** `.planning/ROADMAP.md`
 - **Core value:** A user can drop a document into a local web app, ask questions in natural language, get summaries, and see entities/relationships extracted — with one-command setup.
-- **Current focus:** Phase 5 — Summarization + Graph Extraction
+- **Current focus:** Phase 6 — Model Routing + Side-by-Side Comparison
 
 ## Current Position
 
 - **Milestone:** v1 POC
-- **Current phase:** Phase 5 — Summarization + Graph Extraction (COMPLETE)
-- **Current plan:** Plan 03 complete; Phase 5 done — ready for Phase 6
-- **Status:** Phase 5 complete — all 3 plans done (summarize pipeline, graph pipeline, UI views)
-- **Progress:** 5/7 phases complete
+- **Current phase:** Phase 6 — Model Routing + Side-by-Side Comparison (COMPLETE)
+- **Current plan:** Plan 02 complete; Phase 6 done — ready for Phase 7
+- **Status:** Phase 6 complete — all 2 plans done (router + pipeline metadata, UI + comparison panel)
+- **Progress:** 6/7 phases complete
 
 ```
-[█████░░] 5/7 phases complete
+[██████░] 6/7 phases complete
 ```
 
 ## Performance Metrics
 
-- Phases completed: 5
-- Plans completed: 15
-- Requirements validated: 35/42 (SETUP-01, SETUP-02, SETUP-03, SETUP-04, SETUP-05, LLM-01, LLM-02, LLM-03, LLM-04, LLM-05, INGEST-01, INGEST-02, INGEST-03, INGEST-04, INGEST-05, INGEST-06, IDX-01, IDX-02, IDX-03, IDX-04, IDX-05, IDX-06, UX-03, QA-01, QA-02, QA-03, QA-04, QA-05, UX-02, SUM-01, SUM-02, GRAPH-01, GRAPH-02, GRAPH-03, GRAPH-04)
+- Phases completed: 6
+- Plans completed: 17
+- Requirements validated: 40/42 (SETUP-01, SETUP-02, SETUP-03, SETUP-04, SETUP-05, LLM-01, LLM-02, LLM-03, LLM-04, LLM-05, INGEST-01, INGEST-02, INGEST-03, INGEST-04, INGEST-05, INGEST-06, IDX-01, IDX-02, IDX-03, IDX-04, IDX-05, IDX-06, UX-03, QA-01, QA-02, QA-03, QA-04, QA-05, UX-02, SUM-01, SUM-02, GRAPH-01, GRAPH-02, GRAPH-03, GRAPH-04, ROUTE-01, ROUTE-02, ROUTE-03, ROUTE-04, ROUTE-05)
 - Requirements invalidated: 0
 
 ## Accumulated Context
@@ -71,6 +71,13 @@
 - streamlit-agraph for interactive entity-relationship graph with type-based color map
 - Native mermaid via st.markdown for process-step flowchart rendering
 
+- Pure-function router: route(task, signals) → RouteDecision(model, reason) with zero I/O
+- TaskType enum: QA, SUMMARY, GRAPH_EXTRACT
+- asyncio.gather + ThreadPoolExecutor for parallel comparison execution
+- st.radio for model routing toggle stored in session_state
+- No caching on comparison function (intentional — concept demo)
+- response.usage null-guarded in all pipelines
+
 ### Open Todos
 
 (none)
@@ -92,12 +99,12 @@
 ### Last Session
 
 - **Date:** 2026-04-28
-- **Activity:** Executed Phase 5 — Summarization + Graph Extraction. All 3 plans complete: (1) VectorStore.get_all_by_doc, prompt templates, summarization pipeline with direct/map-reduce routing; (2) Graph extraction pipeline with Pydantic validation, entity dedup, self-correction; (3) Summary/Graph view UI partials with tab-based app layout. 133 tests passing.
-- **Next:** `/gsd-plan-phase 6` to plan Phase 6 (Model Routing + Side-by-Side Comparison)
+- **Activity:** Executed Phase 6 — Model Routing + Side-by-Side Comparison. All 2 plans complete: (1) Pure-function router module + pipeline metadata extension with model/tokens/latency; (2) Sidebar routing toggle, metadata display in all views, parallel comparison panel. 153 tests passing.
+- **Next:** `/gsd-plan-phase 7` to plan Phase 7 (Demo Polish & End-to-End UX)
 
 ### Resume Notes
 
-To resume: run `/gsd-progress` for status, then `/gsd-plan-phase 6` to plan Phase 6. Phase 5 complete with full summarization + graph extraction pipeline and UI.
+To resume: run `/gsd-progress` for status, then `/gsd-plan-phase 7` to plan Phase 7. Phase 6 complete with full model routing and side-by-side comparison.
 
 ---
 *State initialized: 2026-04-28*
