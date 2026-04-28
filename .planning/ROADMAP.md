@@ -7,7 +7,7 @@
 
 ## Phases
 
-- [ ] **Phase 1: Skeleton + NIM Client** — Project scaffolding, ≤3-command setup, and a resilient NVIDIA NIM client with retry/backoff/JSON-mode/batched embeddings
+- [x] **Phase 1: Skeleton + NIM Client** — Project scaffolding, ≤3-command setup, and a resilient NVIDIA NIM client with retry/backoff/JSON-mode/batched embeddings
 - [ ] **Phase 2: Extraction, OCR, Chunking & Vector Store** — Text-first PDF extraction with OCR fallback, structure-aware chunker, and ChromaDB persistence with embedding-model metadata
 - [ ] **Phase 3: Ingestion Pipeline + Upload UI** — End-to-end ingest pipeline with content-hash dedupe and a Streamlit upload + document-list UI
 - [ ] **Phase 4: Q&A Retrieval + Chat with Citations** — Grounded chat over indexed corpus with inline `[chunk_id]` citations and hallucination flagging
@@ -30,9 +30,9 @@
 **Plans:** 3 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Project scaffolding, packaging, env config, Streamlit skeleton
-- [ ] 01-02-PLAN.md — NVIDIA NIM LLM client with retry, JSON mode, batched embeddings
-- [ ] 01-03-PLAN.md — Smoke test, .gitignore, doctor target
+- [x] 01-01-PLAN.md — Project scaffolding, packaging, env config, Streamlit skeleton
+- [x] 01-02-PLAN.md — NVIDIA NIM LLM client with retry, JSON mode, batched embeddings
+- [x] 01-03-PLAN.md — Smoke test, .gitignore, doctor target
 
 **UI hint**: no
 **Research during planning**: no (test-nvidia.mjs is the in-repo reference)
