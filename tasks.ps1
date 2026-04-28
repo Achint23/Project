@@ -15,6 +15,9 @@ param(
 function Invoke-Setup {
     uv sync
     Write-Host "`n✓ Dependencies installed." -ForegroundColor Green
+    Write-Host "  Downloading EasyOCR weights (first time only)..." -ForegroundColor Cyan
+    uv run python -c "import easyocr; easyocr.Reader(['en'], gpu=False)"
+    Write-Host "  EasyOCR weights downloaded." -ForegroundColor Green
     Write-Host "  Copy .env.local.example to .env.local and add your NVIDIA_API_KEY." -ForegroundColor Yellow
 }
 
