@@ -124,9 +124,13 @@ Plans:
   3. A side-by-side panel runs the SAME question against direct (large) and routed (small/alternate) paths in parallel via `asyncio.gather`, rendering both answers, latencies, and token counts with a "concept demo, not benchmark" disclaimer.
   4. The auto-router's decision reason renders as plain text in the UI ("routed via X because Y") on every call.
   5. The comparison panel disables caching and uses identical system prompt, user prompt, retrieved chunks, and temperature — only the model differs.
-**Plans**: TBD
+**Plans:** 2 plans
 **UI hint**: yes
 **Research during planning**: yes — flagged in SUMMARY.md (small-model selection on NVIDIA catalog and free-tier parallel-call behavior need a quick spike)
+
+Plans:
+- [ ] 06-01-PLAN.md — Router module + pipeline metadata extension
+- [ ] 06-02-PLAN.md — UI integration + comparison panel with parallel execution
 
 ### Phase 7: Demo Polish & End-to-End UX
 **Goal**: A presenter can walk through load → process → ask → summarize → extract graph → compare routing in a single browser session, guided by a README quickstart, on a fresh machine.
@@ -149,7 +153,7 @@ Plans:
 | 3. Ingestion Pipeline + Upload UI | 3/3 | Complete | 2026-04-28 |
 | 4. Q&A Retrieval + Chat with Citations | 3/3 | Complete | 2026-04-28 |
 | 5. Summarization + Graph Extraction | 3/3 | Complete | 2026-04-28 |
-| 6. Model Routing + Side-by-Side Comparison | 0/0 | Not started | - |
+| 6. Model Routing + Side-by-Side Comparison | 0/2 | Planned | - |
 | 7. Demo Polish & End-to-End UX | 0/0 | Not started | - |
 
 ## Coverage
