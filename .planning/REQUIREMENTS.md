@@ -74,7 +74,7 @@ Requirements for the POC release. Each maps to roadmap phases.
 - [ ] **UX-01**: Streamlit (or Gradio) web UI exposes upload, document list, chat, summarize, graph view, routing toggle, and routing comparison panel from a single browser session
 - [x] **UX-02**: NVIDIA API errors (rate limit, 504 timeout, auth) are surfaced as readable messages via `st.error`
 - [x] **UX-03**: Heavy resources (LLM client, EasyOCR Reader, Chroma client) are wrapped in `@st.cache_resource` so Streamlit reruns don’t re-instantiate them
-- [ ] **UX-04**: A README quickstart documents the end-to-end demo flow: load sample → process → ask question → summarize → extract graph → compare direct vs routed
+- [x] **UX-04**: A README quickstart documents the end-to-end demo flow: load sample → process → ask question → summarize → extract graph → compare direct vs routed
 
 ## v2 Requirements
 
@@ -159,7 +159,7 @@ Deferred — explicitly out of scope for the POC, tracked for future.
 | UX-01 | Phase 7: Demo Polish & End-to-End UX | Pending |
 | UX-02 | Phase 4: Q&A Retrieval + Chat with Citations | Complete |
 | UX-03 | Phase 3: Ingestion Pipeline + Upload UI | Complete |
-| UX-04 | Phase 7: Demo Polish & End-to-End UX | Pending |
+| UX-04 | Phase 7: Demo Polish & End-to-End UX | Complete |
 
 **Coverage:**
 - v1 requirements: 42 total (SETUP 5 + LLM 5 + INGEST 6 + IDX 6 + QA 5 + SUM 2 + GRAPH 4 + ROUTE 5 + UX 4)

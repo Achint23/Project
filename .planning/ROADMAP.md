@@ -145,7 +145,7 @@ Plans:
 **Research during planning**: no (Streamlit conventions documented in PITFALLS #11)
 
 Plans:
-- [ ] 07-01-PLAN.md — README documentation (install, demo walkthrough, troubleshooting, architecture)
+- [x] 07-01-PLAN.md — README documentation (install, demo walkthrough, troubleshooting, architecture)
 - [ ] 07-02-PLAN.md — Playwright E2E tests, demo dry-run command, UI polish verification
 
 ## Progress
@@ -158,7 +158,7 @@ Plans:
 | 4. Q&A Retrieval + Chat with Citations | 3/3 | Complete | 2026-04-28 |
 | 5. Summarization + Graph Extraction | 3/3 | Complete | 2026-04-28 |
 | 6. Model Routing + Side-by-Side Comparison | 2/2 | Complete | 2026-04-28 |
-| 7. Demo Polish & End-to-End UX | 0/2 | Planned | - |
+| 7. Demo Polish & End-to-End UX | 1/2 | In Progress | - |
 
 ## Coverage
 

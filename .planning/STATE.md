@@ -15,8 +15,8 @@
 
 - **Milestone:** v1 POC
 - **Current phase:** Phase 7 — Demo Polish & End-to-End UX (PLANNED)
-- **Current plan:** 2 plans in 1 wave — ready for execution
-- **Status:** Phase 7 planned — 2 plans (Wave 1 parallel): README docs + Playwright E2E
+- **Current plan:** Plan 01 complete — Plan 02 remaining (Playwright E2E)
+- **Status:** Phase 7 in progress — 1/2 plans complete (README docs done)
 - **Progress:** 6/7 phases complete
 
 ```
@@ -27,7 +27,7 @@
 
 - Phases completed: 6
 - Plans completed: 17
-- Requirements validated: 40/42 (SETUP-01, SETUP-02, SETUP-03, SETUP-04, SETUP-05, LLM-01, LLM-02, LLM-03, LLM-04, LLM-05, INGEST-01, INGEST-02, INGEST-03, INGEST-04, INGEST-05, INGEST-06, IDX-01, IDX-02, IDX-03, IDX-04, IDX-05, IDX-06, UX-03, QA-01, QA-02, QA-03, QA-04, QA-05, UX-02, SUM-01, SUM-02, GRAPH-01, GRAPH-02, GRAPH-03, GRAPH-04, ROUTE-01, ROUTE-02, ROUTE-03, ROUTE-04, ROUTE-05)
+- Requirements validated: 41/42 (SETUP-01, SETUP-02, SETUP-03, SETUP-04, SETUP-05, LLM-01, LLM-02, LLM-03, LLM-04, LLM-05, INGEST-01, INGEST-02, INGEST-03, INGEST-04, INGEST-05, INGEST-06, IDX-01, IDX-02, IDX-03, IDX-04, IDX-05, IDX-06, UX-03, QA-01, QA-02, QA-03, QA-04, QA-05, UX-02, SUM-01, SUM-02, GRAPH-01, GRAPH-02, GRAPH-03, GRAPH-04, ROUTE-01, ROUTE-02, ROUTE-03, ROUTE-04, ROUTE-05, UX-04)
 - Requirements invalidated: 0
 
 ## Accumulated Context
@@ -99,12 +99,12 @@
 ### Last Session
 
 - **Date:** 2026-04-28
-- **Activity:** Executed Phase 6 — Model Routing + Side-by-Side Comparison. All 2 plans complete: (1) Pure-function router module + pipeline metadata extension with model/tokens/latency; (2) Sidebar routing toggle, metadata display in all views, parallel comparison panel. 153 tests passing.
-- **Next:** `/gsd-plan-phase 7` to plan Phase 7 (Demo Polish & End-to-End UX)
+- **Activity:** Executed Phase 7 Plan 01 — README documentation. Created comprehensive README.md with quickstart, demo walkthrough (6 steps), troubleshooting (6 issues), architecture overview, and tech stack. All references verified against project files.
+- **Next:** Execute Plan 02 (Playwright E2E tests, demo dry-run command)
 
 ### Resume Notes
 
-To resume: run `/gsd-progress` for status, then `/gsd-plan-phase 7` to plan Phase 7. Phase 6 complete with full model routing and side-by-side comparison.
+To resume: run `/gsd-execute-phase 7` to execute Plan 02 (Playwright E2E). Plan 01 (README) complete.
 
 ---
 *State initialized: 2026-04-28*
