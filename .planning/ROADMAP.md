@@ -90,7 +90,7 @@ Plans:
 **Research during planning**: no (standard grounded-RAG pattern, citation validation documented in PITFALLS #8)
 
 Plans:
-- [ ] 04-01-PLAN.md — Retriever module with top-k reordering + grounded QA prompt template
+- [x] 04-01-PLAN.md — Retriever module with top-k reordering + grounded QA prompt template
 - [ ] 04-02-PLAN.md — Query pipeline with citation parsing and post-hoc validation
 - [ ] 04-03-PLAN.md — Streamlit chat UI with expandable citations, hallucination flags, and API error handling
 
@@ -141,7 +141,7 @@ Plans:
 | 1. Skeleton + NIM Client | 0/0 | Not started | - |
 | 2. Extraction, OCR, Chunking & Vector Store | 0/0 | Not started | - |
 | 3. Ingestion Pipeline + Upload UI | 0/0 | Not started | - |
-| 4. Q&A Retrieval + Chat with Citations | 0/0 | Not started | - |
+| 4. Q&A Retrieval + Chat with Citations | 1/3 | In progress | - |
 | 5. Summarization + Graph Extraction | 0/0 | Not started | - |
 | 6. Model Routing + Side-by-Side Comparison | 0/0 | Not started | - |
 | 7. Demo Polish & End-to-End UX | 0/0 | Not started | - |
