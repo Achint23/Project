@@ -15,9 +15,9 @@
 
 - **Milestone:** v1 POC
 - **Current phase:** Phase 5 — Summarization + Graph Extraction
-- **Current plan:** Not yet planned (run `/gsd-plan-phase 5`)
-- **Status:** Phase 4 complete; ready for Phase 5
-- **Progress:** 4/7 phases complete
+- **Current plan:** Plan 01 complete; ready for Plan 02
+- **Status:** Phase 5 in progress — Plan 01 (summarization pipeline) complete
+- **Progress:** 4/7 phases complete (Phase 5: 1 plan done)
 
 ```
 [████░░░] 4/7 phases complete
@@ -26,7 +26,7 @@
 ## Performance Metrics
 
 - Phases completed: 4
-- Plans completed: 12
+- Plans completed: 13
 - Requirements validated: 29/42 (SETUP-01, SETUP-02, SETUP-03, SETUP-04, SETUP-05, LLM-01, LLM-02, LLM-03, LLM-04, LLM-05, INGEST-01, INGEST-02, INGEST-03, INGEST-04, INGEST-05, INGEST-06, IDX-01, IDX-02, IDX-03, IDX-04, IDX-05, IDX-06, UX-03, QA-01, QA-02, QA-03, QA-04, QA-05, UX-02)
 - Requirements invalidated: 0
 
@@ -57,6 +57,10 @@
 - Regex citation filter `^[a-f0-9]+_chunk_\d+$` prevents false positives from markdown links
 - Temperature 0.3 for grounded Q&A — lower than default to reduce hallucination
 - Empty retrieval guard short-circuits without LLM call — saves API quota
+- TOKEN_BUDGET=6000 for direct vs map-reduce summarization routing
+- tiktoken cl100k_base for token counting — consistent across pipelines
+- Map step max_tokens=512, reduce step max_tokens=1024
+- graph_extract.txt uses doubled braces for str.format escaping
 - Chat history in st.session_state.chat_messages — persists across Streamlit reruns
 - Error messages via st.error for all 5 openai exception types — no stack traces (T-04-08)
 
@@ -81,12 +85,12 @@
 ### Last Session
 
 - **Date:** 2026-04-28
-- **Activity:** Executed Phase 4 — Q&A Retrieval + Chat with Citations. Created retriever module with top-k reordering, query pipeline with citation parsing/validation, and Streamlit chat UI with expandable citations and hallucination flags. Fixed NVIDIA asymmetric embedding `input_type` parameter and reduced chunk max_tokens from 700→450 for embedding model's 512-token limit. 95 tests passing. Browser-verified: grounded answers with citations, grounded refusal for unrelated questions.
-- **Next:** `/gsd-plan-phase 5` to plan Phase 5 (Summarization + Graph Extraction)
+- **Activity:** Executed Phase 5 Plan 01 — Summarization Pipeline Foundation. Added rapidfuzz + streamlit-agraph deps, VectorStore.get_all_by_doc method, 4 prompt templates (summary_map, summary_reduce, graph_extract, graph_correct), and summarization pipeline with direct/map-reduce routing. 100 tests passing (7 new).
+- **Next:** Execute Phase 5 Plan 02 (graph extraction pipeline + UI integration)
 
 ### Resume Notes
 
-To resume: run `/gsd-progress` for status, then `/gsd-plan-phase 5` to plan Phase 5. Phase 4 complete with full chat+citation pipeline.
+To resume: run `/gsd-progress` for status, then execute Phase 5 Plan 02. Plan 01 (summarization pipeline) complete with all prompt templates ready.
 
 ---
 *State initialized: 2026-04-28*
