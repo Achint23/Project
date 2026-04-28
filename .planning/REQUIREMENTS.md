@@ -9,19 +9,19 @@ Requirements for the POC release. Each maps to roadmap phases.
 
 ### Setup & Packaging
 
-- [ ] **SETUP-01**: Project sets up locally in ≤ 3 commands from a fresh clone (e.g., `uv sync`, configure `.env.local`, `make run`)
-- [ ] **SETUP-02**: A `Makefile` (or equivalent task runner) exposes `setup`, `run`, `clean`, and `doctor` targets
-- [ ] **SETUP-03**: `.env.local` pattern reads `NVIDIA_API_KEY`, `NVIDIA_BASE_URL`, `NVIDIA_MODEL`, `NVIDIA_ROUTE_MODEL`, `NVIDIA_EMBED_MODEL`; `.env.local.example` is committed
+- [x] **SETUP-01**: Project sets up locally in ≤ 3 commands from a fresh clone (e.g., `uv sync`, configure `.env.local`, `make run`)
+- [x] **SETUP-02**: A `Makefile` (or equivalent task runner) exposes `setup`, `run`, `clean`, and `doctor` targets
+- [x] **SETUP-03**: `.env.local` pattern reads `NVIDIA_API_KEY`, `NVIDIA_BASE_URL`, `NVIDIA_MODEL`, `NVIDIA_ROUTE_MODEL`, `NVIDIA_EMBED_MODEL`; `.env.local.example` is committed
 - [x] **SETUP-04**: EasyOCR weights are pre-downloaded during `make setup` so the first user-facing run is instant
-- [ ] **SETUP-05**: Project runs on a developer laptop with Python 3.10–3.12 (CPU only) without external system binaries
+- [x] **SETUP-05**: Project runs on a developer laptop with Python 3.10–3.12 (CPU only) without external system binaries
 
 ### LLM Integration
 
-- [ ] **LLM-01**: Python NVIDIA NIM client uses the OpenAI-compatible SDK pattern from `test-nvidia.mjs` (Bearer auth, configurable `base_url`, default model `meta/llama-3.1-70b-instruct`)
-- [ ] **LLM-02**: LLM client implements 60s timeout and exponential-backoff-with-jitter retry on HTTP 429 / 504
-- [ ] **LLM-03**: LLM client supports JSON mode (`response_format={"type":"json_object"}`) for structured extraction
-- [ ] **LLM-04**: LLM client batches embedding calls (32–64 chunks per request) against the configured embedding model
-- [ ] **LLM-05**: Smoke test asserts a JSON-mode chat round-trip succeeds against NVIDIA NIM
+- [x] **LLM-01**: Python NVIDIA NIM client uses the OpenAI-compatible SDK pattern from `test-nvidia.mjs` (Bearer auth, configurable `base_url`, default model `meta/llama-3.1-70b-instruct`)
+- [x] **LLM-02**: LLM client implements 60s timeout and exponential-backoff-with-jitter retry on HTTP 429 / 504
+- [x] **LLM-03**: LLM client supports JSON mode (`response_format={"type":"json_object"}`) for structured extraction
+- [x] **LLM-04**: LLM client batches embedding calls (32–64 chunks per request) against the configured embedding model
+- [x] **LLM-05**: Smoke test asserts a JSON-mode chat round-trip succeeds against NVIDIA NIM
 
 ### Document Ingestion
 
@@ -51,23 +51,23 @@ Requirements for the POC release. Each maps to roadmap phases.
 
 ### Summarization
 
-- [ ] **SUM-01**: User can request a concise, business-readable summary of any indexed document
-- [ ] **SUM-02**: Summarization uses a map-reduce pattern over chunked content for documents that exceed the model context window
+- [x] **SUM-01**: User can request a concise, business-readable summary of any indexed document
+- [x] **SUM-02**: Summarization uses a map-reduce pattern over chunked content for documents that exceed the model context window
 
 ### Graph-Style Semantic Extraction
 
-- [ ] **GRAPH-01**: User can run prompt-based extraction that produces structured output containing **entities, relationships, process steps, decision points, and business rules**
-- [ ] **GRAPH-02**: Output is validated against a Pydantic schema; on parse failure, a one-shot self-correction retry is performed
-- [ ] **GRAPH-03**: Extracted graph data is rendered as both a readable table view and a simple node/edge (or mermaid process-flow) view in the UI
-- [ ] **GRAPH-04**: Entity deduplication is applied via fuzzy string matching (e.g., `rapidfuzz`) with a documented threshold
+- [x] **GRAPH-01**: User can run prompt-based extraction that produces structured output containing **entities, relationships, process steps, decision points, and business rules**
+- [x] **GRAPH-02**: Output is validated against a Pydantic schema; on parse failure, a one-shot self-correction retry is performed
+- [x] **GRAPH-03**: Extracted graph data is rendered as both a readable table view and a simple node/edge (or mermaid process-flow) view in the UI
+- [x] **GRAPH-04**: Entity deduplication is applied via fuzzy string matching (e.g., `rapidfuzz`) with a documented threshold
 
 ### Model Routing
 
-- [ ] **ROUTE-01**: A `routers/model_router.py` module exposes a pure function `route(task, signals) → RouteDecision(model, reason)`
-- [ ] **ROUTE-02**: Sidebar toggle lets the user pick `auto`, `small (route)`, or `large (direct)` model selection
-- [ ] **ROUTE-03**: Every LLM call surfaces the model used, tokens consumed, and latency in the UI
-- [ ] **ROUTE-04**: A side-by-side comparison panel runs the SAME question against the direct path (large model) and the routed path (small/alternate model) in parallel (`asyncio.gather`), showing both answers, latencies, and token counts
-- [ ] **ROUTE-05**: The auto-router makes decisions based on task type and document length signals, and renders the decision reason as plain text in the UI
+- [x] **ROUTE-01**: A `routers/model_router.py` module exposes a pure function `route(task, signals) → RouteDecision(model, reason)`
+- [x] **ROUTE-02**: Sidebar toggle lets the user pick `auto`, `small (route)`, or `large (direct)` model selection
+- [x] **ROUTE-03**: Every LLM call surfaces the model used, tokens consumed, and latency in the UI
+- [x] **ROUTE-04**: A side-by-side comparison panel runs the SAME question against the direct path (large model) and the routed path (small/alternate model) in parallel (`asyncio.gather`), showing both answers, latencies, and token counts
+- [x] **ROUTE-05**: The auto-router makes decisions based on task type and document length signals, and renders the decision reason as plain text in the UI
 
 ### Demo & UX
 
@@ -118,16 +118,16 @@ Deferred — explicitly out of scope for the POC, tracked for future.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SETUP-01 | Phase 1: Skeleton + NIM Client | Pending |
-| SETUP-02 | Phase 1: Skeleton + NIM Client | Pending |
-| SETUP-03 | Phase 1: Skeleton + NIM Client | Pending |
+| SETUP-01 | Phase 1: Skeleton + NIM Client | Complete |
+| SETUP-02 | Phase 1: Skeleton + NIM Client | Complete |
+| SETUP-03 | Phase 1: Skeleton + NIM Client | Complete |
 | SETUP-04 | Phase 2: Extraction, OCR, Chunking & Vector Store | Complete |
-| SETUP-05 | Phase 1: Skeleton + NIM Client | Pending |
-| LLM-01 | Phase 1: Skeleton + NIM Client | Pending |
-| LLM-02 | Phase 1: Skeleton + NIM Client | Pending |
-| LLM-03 | Phase 1: Skeleton + NIM Client | Pending |
-| LLM-04 | Phase 1: Skeleton + NIM Client | Pending |
-| LLM-05 | Phase 1: Skeleton + NIM Client | Pending |
+| SETUP-05 | Phase 1: Skeleton + NIM Client | Complete |
+| LLM-01 | Phase 1: Skeleton + NIM Client | Complete |
+| LLM-02 | Phase 1: Skeleton + NIM Client | Complete |
+| LLM-03 | Phase 1: Skeleton + NIM Client | Complete |
+| LLM-04 | Phase 1: Skeleton + NIM Client | Complete |
+| LLM-05 | Phase 1: Skeleton + NIM Client | Complete |
 | INGEST-01 | Phase 3: Ingestion Pipeline + Upload UI | Complete |
 | INGEST-02 | Phase 2: Extraction, OCR, Chunking & Vector Store | Complete |
 | INGEST-03 | Phase 2: Extraction, OCR, Chunking & Vector Store | Complete |
@@ -140,24 +140,24 @@ Deferred — explicitly out of scope for the POC, tracked for future.
 | IDX-04 | Phase 2: Extraction, OCR, Chunking & Vector Store | Complete |
 | IDX-05 | Phase 3: Ingestion Pipeline + Upload UI | Complete |
 | IDX-06 | Phase 3: Ingestion Pipeline + Upload UI | Complete |
-| QA-01 | Phase 4: Q&A Retrieval + Chat with Citations | Pending |
+| QA-01 | Phase 4: Q&A Retrieval + Chat with Citations | Complete |
 | QA-02 | Phase 4: Q&A Retrieval + Chat with Citations | Complete |
-| QA-03 | Phase 4: Q&A Retrieval + Chat with Citations | Pending |
+| QA-03 | Phase 4: Q&A Retrieval + Chat with Citations | Complete |
 | QA-04 | Phase 4: Q&A Retrieval + Chat with Citations | Complete |
 | QA-05 | Phase 4: Q&A Retrieval + Chat with Citations | Complete |
-| SUM-01 | Phase 5: Summarization + Graph Extraction | Pending |
-| SUM-02 | Phase 5: Summarization + Graph Extraction | Pending |
-| GRAPH-01 | Phase 5: Summarization + Graph Extraction | Pending |
-| GRAPH-02 | Phase 5: Summarization + Graph Extraction | Pending |
-| GRAPH-03 | Phase 5: Summarization + Graph Extraction | Pending |
-| GRAPH-04 | Phase 5: Summarization + Graph Extraction | Pending |
-| ROUTE-01 | Phase 6: Model Routing + Side-by-Side Comparison | Pending |
-| ROUTE-02 | Phase 6: Model Routing + Side-by-Side Comparison | Pending |
-| ROUTE-03 | Phase 6: Model Routing + Side-by-Side Comparison | Pending |
-| ROUTE-04 | Phase 6: Model Routing + Side-by-Side Comparison | Pending |
-| ROUTE-05 | Phase 6: Model Routing + Side-by-Side Comparison | Pending |
+| SUM-01 | Phase 5: Summarization + Graph Extraction | Complete |
+| SUM-02 | Phase 5: Summarization + Graph Extraction | Complete |
+| GRAPH-01 | Phase 5: Summarization + Graph Extraction | Complete |
+| GRAPH-02 | Phase 5: Summarization + Graph Extraction | Complete |
+| GRAPH-03 | Phase 5: Summarization + Graph Extraction | Complete |
+| GRAPH-04 | Phase 5: Summarization + Graph Extraction | Complete |
+| ROUTE-01 | Phase 6: Model Routing + Side-by-Side Comparison | Complete |
+| ROUTE-02 | Phase 6: Model Routing + Side-by-Side Comparison | Complete |
+| ROUTE-03 | Phase 6: Model Routing + Side-by-Side Comparison | Complete |
+| ROUTE-04 | Phase 6: Model Routing + Side-by-Side Comparison | Complete |
+| ROUTE-05 | Phase 6: Model Routing + Side-by-Side Comparison | Complete |
 | UX-01 | Phase 7: Demo Polish & End-to-End UX | Pending |
-| UX-02 | Phase 4: Q&A Retrieval + Chat with Citations | Pending |
+| UX-02 | Phase 4: Q&A Retrieval + Chat with Citations | Complete |
 | UX-03 | Phase 3: Ingestion Pipeline + Upload UI | Complete |
 | UX-04 | Phase 7: Demo Polish & End-to-End UX | Pending |
 
@@ -171,4 +171,4 @@ Deferred — explicitly out of scope for the POC, tracked for future.
 
 ---
 *Requirements defined: 2026-04-28*
-*Last updated: 2026-04-28 after initial definition*
+*Last updated: 2026-04-28 after Phase 6 completion*
