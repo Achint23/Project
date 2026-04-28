@@ -15,9 +15,9 @@
 
 - **Milestone:** v1 POC
 - **Current phase:** Phase 5 — Summarization + Graph Extraction
-- **Current plan:** Plan 01 complete; ready for Plan 02
-- **Status:** Phase 5 in progress — Plan 01 (summarization pipeline) complete
-- **Progress:** 4/7 phases complete (Phase 5: 1 plan done)
+- **Current plan:** Plan 02 complete; ready for Plan 03
+- **Status:** Phase 5 in progress — Plan 02 (graph extraction pipeline) complete
+- **Progress:** 4/7 phases complete (Phase 5: 2 plans done)
 
 ```
 [████░░░] 4/7 phases complete
@@ -26,7 +26,7 @@
 ## Performance Metrics
 
 - Phases completed: 4
-- Plans completed: 13
+- Plans completed: 14
 - Requirements validated: 29/42 (SETUP-01, SETUP-02, SETUP-03, SETUP-04, SETUP-05, LLM-01, LLM-02, LLM-03, LLM-04, LLM-05, INGEST-01, INGEST-02, INGEST-03, INGEST-04, INGEST-05, INGEST-06, IDX-01, IDX-02, IDX-03, IDX-04, IDX-05, IDX-06, UX-03, QA-01, QA-02, QA-03, QA-04, QA-05, UX-02)
 - Requirements invalidated: 0
 
@@ -63,6 +63,9 @@
 - graph_extract.txt uses doubled braces for str.format escaping
 - Chat history in st.session_state.chat_messages — persists across Streamlit reruns
 - Error messages via st.error for all 5 openai exception types — no stack traces (T-04-08)
+- Pydantic field aliases (populate_by_name=True) bridge prompt template JSON keys to plan model names
+- DEDUP_THRESHOLD=85 for entity fuzzy matching via rapidfuzz token_sort_ratio
+- Longer entity name kept as canonical during dedup merge
 
 ### Open Todos
 
@@ -85,12 +88,12 @@
 ### Last Session
 
 - **Date:** 2026-04-28
-- **Activity:** Executed Phase 5 Plan 01 — Summarization Pipeline Foundation. Added rapidfuzz + streamlit-agraph deps, VectorStore.get_all_by_doc method, 4 prompt templates (summary_map, summary_reduce, graph_extract, graph_correct), and summarization pipeline with direct/map-reduce routing. 100 tests passing (7 new).
-- **Next:** Execute Phase 5 Plan 02 (graph extraction pipeline + UI integration)
+- **Activity:** Executed Phase 5 Plan 02 — Graph Extraction Pipeline. Created pipelines/graph.py with Pydantic-validated LLM output, one-shot self-correction, rapidfuzz entity dedup (threshold 85), and field aliases bridging prompt template schema. 12 new tests, 112 total passing.
+- **Next:** Execute Phase 5 Plan 03 (UI integration: summary view + graph view)
 
 ### Resume Notes
 
-To resume: run `/gsd-progress` for status, then execute Phase 5 Plan 02. Plan 01 (summarization pipeline) complete with all prompt templates ready.
+To resume: run `/gsd-progress` for status, then execute Phase 5 Plan 03. Plans 01 (summarization) and 02 (graph extraction) complete. UI integration next.
 
 ---
 *State initialized: 2026-04-28*
