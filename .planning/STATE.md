@@ -25,9 +25,9 @@
 
 ## Performance Metrics
 
-- Phases completed: 6
-- Plans completed: 17
-- Requirements validated: 41/42 (SETUP-01, SETUP-02, SETUP-03, SETUP-04, SETUP-05, LLM-01, LLM-02, LLM-03, LLM-04, LLM-05, INGEST-01, INGEST-02, INGEST-03, INGEST-04, INGEST-05, INGEST-06, IDX-01, IDX-02, IDX-03, IDX-04, IDX-05, IDX-06, UX-03, QA-01, QA-02, QA-03, QA-04, QA-05, UX-02, SUM-01, SUM-02, GRAPH-01, GRAPH-02, GRAPH-03, GRAPH-04, ROUTE-01, ROUTE-02, ROUTE-03, ROUTE-04, ROUTE-05, UX-04)
+- Phases completed: 7
+- Plans completed: 19
+- Requirements validated: 42/42 (SETUP-01, SETUP-02, SETUP-03, SETUP-04, SETUP-05, LLM-01, LLM-02, LLM-03, LLM-04, LLM-05, INGEST-01, INGEST-02, INGEST-03, INGEST-04, INGEST-05, INGEST-06, IDX-01, IDX-02, IDX-03, IDX-04, IDX-05, IDX-06, UX-01, UX-03, UX-04, QA-01, QA-02, QA-03, QA-04, QA-05, UX-02, SUM-01, SUM-02, GRAPH-01, GRAPH-02, GRAPH-03, GRAPH-04, ROUTE-01, ROUTE-02, ROUTE-03, ROUTE-04, ROUTE-05)
 - Requirements invalidated: 0
 
 ## Accumulated Context
@@ -77,6 +77,9 @@
 - st.radio for model routing toggle stored in session_state
 - No caching on comparison function (intentional — concept demo)
 - response.usage null-guarded in all pipelines
+- pytest-playwright for E2E testing — stays in pytest ecosystem, no Node.js runner
+- tasks.ps1 demo command manages Streamlit server lifecycle for E2E dry-run
+- Playwright Chromium pre-downloaded during tasks.ps1 setup
 
 ### Open Todos
 

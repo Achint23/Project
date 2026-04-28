@@ -13,7 +13,7 @@
 - [x] **Phase 4: Q&A Retrieval + Chat with Citations** — Grounded chat over indexed corpus with inline `[chunk_id]` citations and hallucination flagging
 - [x] **Phase 5: Summarization + Graph Extraction** — Map-reduce summaries plus prompt-based entity/relationship/process-step extraction with Pydantic validation and node-edge view
 - [x] **Phase 6: Model Routing + Side-by-Side Comparison** — Pure-function router, manual/auto toggle, and parallel direct-vs-routed comparison panel
-- [ ] **Phase 7: Demo Polish & End-to-End UX** — Unified single-session demo flow, README quickstart, and demo-readiness checks
+- [x] **Phase 7: Demo Polish & End-to-End UX** — Unified single-session demo flow, README quickstart, and demo-readiness checks
 
 ## Phase Details
 
@@ -146,7 +146,7 @@ Plans:
 
 Plans:
 - [x] 07-01-PLAN.md — README documentation (install, demo walkthrough, troubleshooting, architecture)
-- [ ] 07-02-PLAN.md — Playwright E2E tests, demo dry-run command, UI polish verification
+- [x] 07-02-PLAN.md — Playwright E2E tests, demo dry-run command, UI polish verification
 
 ## Progress
 

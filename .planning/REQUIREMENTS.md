@@ -156,7 +156,7 @@ Deferred — explicitly out of scope for the POC, tracked for future.
 | ROUTE-03 | Phase 6: Model Routing + Side-by-Side Comparison | Complete |
 | ROUTE-04 | Phase 6: Model Routing + Side-by-Side Comparison | Complete |
 | ROUTE-05 | Phase 6: Model Routing + Side-by-Side Comparison | Complete |
-| UX-01 | Phase 7: Demo Polish & End-to-End UX | Pending |
+| UX-01 | Phase 7: Demo Polish & End-to-End UX | Complete |
 | UX-02 | Phase 4: Q&A Retrieval + Chat with Citations | Complete |
 | UX-03 | Phase 3: Ingestion Pipeline + Upload UI | Complete |
 | UX-04 | Phase 7: Demo Polish & End-to-End UX | Complete |
