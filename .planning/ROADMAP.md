@@ -10,7 +10,7 @@
 - [x] **Phase 1: Skeleton + NIM Client** — Project scaffolding, ≤3-command setup, and a resilient NVIDIA NIM client with retry/backoff/JSON-mode/batched embeddings
 - [x] **Phase 2: Extraction, OCR, Chunking & Vector Store** — Text-first PDF extraction with OCR fallback, structure-aware chunker, and ChromaDB persistence with embedding-model metadata
 - [x] **Phase 3: Ingestion Pipeline + Upload UI** — End-to-end ingest pipeline with content-hash dedupe and a Streamlit upload + document-list UI
-- [ ] **Phase 4: Q&A Retrieval + Chat with Citations** — Grounded chat over indexed corpus with inline `[chunk_id]` citations and hallucination flagging
+- [x] **Phase 4: Q&A Retrieval + Chat with Citations** — Grounded chat over indexed corpus with inline `[chunk_id]` citations and hallucination flagging
 - [ ] **Phase 5: Summarization + Graph Extraction** — Map-reduce summaries plus prompt-based entity/relationship/process-step extraction with Pydantic validation and node-edge view
 - [ ] **Phase 6: Model Routing + Side-by-Side Comparison** — Pure-function router, manual/auto toggle, and parallel direct-vs-routed comparison panel
 - [ ] **Phase 7: Demo Polish & End-to-End UX** — Unified single-session demo flow, README quickstart, and demo-readiness checks

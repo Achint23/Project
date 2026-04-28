@@ -1,6 +1,6 @@
 # Project State: DocBot
 
-**Last updated:** 2026-04-28 (Phase 4, plan 02 complete)
+**Last updated:** 2026-04-28 (Phase 4 complete)
 
 ## Project Reference
 
@@ -9,14 +9,14 @@
 - **Requirements doc:** `.planning/REQUIREMENTS.md`
 - **Roadmap doc:** `.planning/ROADMAP.md`
 - **Core value:** A user can drop a document into a local web app, ask questions in natural language, get summaries, and see entities/relationships extracted — with one-command setup.
-- **Current focus:** Phase 4 — Q&A Retrieval + Chat with Citations
+- **Current focus:** Phase 5 — Summarization + Graph Extraction
 
 ## Current Position
 
 - **Milestone:** v1 POC
-- **Current phase:** Phase 4 — Q&A Retrieval + Chat with Citations
-- **Current plan:** Plan 03 complete; phase 4 done
-- **Status:** Phase 4 complete (all 3 plans done)
+- **Current phase:** Phase 5 — Summarization + Graph Extraction
+- **Current plan:** Not yet planned (run `/gsd-plan-phase 5`)
+- **Status:** Phase 4 complete; ready for Phase 5
 - **Progress:** 4/7 phases complete
 
 ```
@@ -25,7 +25,7 @@
 
 ## Performance Metrics
 
-- Phases completed: 3
+- Phases completed: 4
 - Plans completed: 12
 - Requirements validated: 29/42 (SETUP-01, SETUP-02, SETUP-03, SETUP-04, SETUP-05, LLM-01, LLM-02, LLM-03, LLM-04, LLM-05, INGEST-01, INGEST-02, INGEST-03, INGEST-04, INGEST-05, INGEST-06, IDX-01, IDX-02, IDX-03, IDX-04, IDX-05, IDX-06, UX-03, QA-01, QA-02, QA-03, QA-04, QA-05, UX-02)
 - Requirements invalidated: 0
@@ -81,12 +81,12 @@
 ### Last Session
 
 - **Date:** 2026-04-28
-- **Activity:** Executed Phase 4 Plan 03 — created chat UI (ui/chat.py) with citation rendering, hallucination flags, and openai error handling. Integrated into app.py. 13 new tests, 95 total passing.
-- **Next:** Execute Phase 5 (Summarization + Graph Extraction)
+- **Activity:** Executed Phase 4 — Q&A Retrieval + Chat with Citations. Created retriever module with top-k reordering, query pipeline with citation parsing/validation, and Streamlit chat UI with expandable citations and hallucination flags. Fixed NVIDIA asymmetric embedding `input_type` parameter and reduced chunk max_tokens from 700→450 for embedding model's 512-token limit. 95 tests passing. Browser-verified: grounded answers with citations, grounded refusal for unrelated questions.
+- **Next:** `/gsd-plan-phase 5` to plan Phase 5 (Summarization + Graph Extraction)
 
 ### Resume Notes
 
-To resume: run `/gsd-execute-phase 5` to start Phase 5 (Summarization + Graph Extraction). Phase 4 complete.
+To resume: run `/gsd-progress` for status, then `/gsd-plan-phase 5` to plan Phase 5. Phase 4 complete with full chat+citation pipeline.
 
 ---
 *State initialized: 2026-04-28*
