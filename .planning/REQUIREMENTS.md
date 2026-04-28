@@ -12,7 +12,7 @@ Requirements for the POC release. Each maps to roadmap phases.
 - [ ] **SETUP-01**: Project sets up locally in ≤ 3 commands from a fresh clone (e.g., `uv sync`, configure `.env.local`, `make run`)
 - [ ] **SETUP-02**: A `Makefile` (or equivalent task runner) exposes `setup`, `run`, `clean`, and `doctor` targets
 - [ ] **SETUP-03**: `.env.local` pattern reads `NVIDIA_API_KEY`, `NVIDIA_BASE_URL`, `NVIDIA_MODEL`, `NVIDIA_ROUTE_MODEL`, `NVIDIA_EMBED_MODEL`; `.env.local.example` is committed
-- [ ] **SETUP-04**: EasyOCR weights are pre-downloaded during `make setup` so the first user-facing run is instant
+- [x] **SETUP-04**: EasyOCR weights are pre-downloaded during `make setup` so the first user-facing run is instant
 - [ ] **SETUP-05**: Project runs on a developer laptop with Python 3.10–3.12 (CPU only) without external system binaries
 
 ### LLM Integration
@@ -26,18 +26,18 @@ Requirements for the POC release. Each maps to roadmap phases.
 ### Document Ingestion
 
 - [ ] **INGEST-01**: User can upload PDF, scanned PDF, and image-based document files via the web UI
-- [ ] **INGEST-02**: System auto-detects scanned/image pages and routes them to OCR (EasyOCR) while sending text-PDF pages to direct extraction
-- [ ] **INGEST-03**: Text-PDF extraction uses PyMuPDF and preserves paragraph structure plus basic table content
+- [x] **INGEST-02**: System auto-detects scanned/image pages and routes them to OCR (EasyOCR) while sending text-PDF pages to direct extraction
+- [x] **INGEST-03**: Text-PDF extraction uses PyMuPDF and preserves paragraph structure plus basic table content
 - [ ] **INGEST-04**: A small bundled set of sample documents (digital PDF, scanned PDF, multi-column, table-heavy) ships in `data/samples/` and can be loaded with one click
 - [ ] **INGEST-05**: Re-uploading the same file is idempotent (content-hash dedupe — no duplicate vectors)
 - [ ] **INGEST-06**: Upload UI shows progress (`st.status`) and surfaces errors clearly
 
 ### Indexing & Retrieval
 
-- [ ] **IDX-01**: Documents are chunked with a structure-aware splitter (~500–800 tokens, ~100–150 overlap) that does not split inside tables, lists, or headings
-- [ ] **IDX-02**: Tables and headings are emitted as atomic chunks with `chunk_type` metadata
-- [ ] **IDX-03**: Chunks are embedded via NVIDIA NIM and persisted to ChromaDB (`PersistentClient`, telemetry off, single collection with `doc_id` metadata)
-- [ ] **IDX-04**: ChromaDB collection metadata stores `embedding_model` and `embedding_dim`; mismatch on startup is detected and reported
+- [x] **IDX-01**: Documents are chunked with a structure-aware splitter (~500–800 tokens, ~100–150 overlap) that does not split inside tables, lists, or headings
+- [x] **IDX-02**: Tables and headings are emitted as atomic chunks with `chunk_type` metadata
+- [x] **IDX-03**: Chunks are embedded via NVIDIA NIM and persisted to ChromaDB (`PersistentClient`, telemetry off, single collection with `doc_id` metadata)
+- [x] **IDX-04**: ChromaDB collection metadata stores `embedding_model` and `embedding_dim`; mismatch on startup is detected and reported
 - [ ] **IDX-05**: Semantic top-k retrieval (k=3–5) supports filtering by `doc_id`
 - [ ] **IDX-06**: A "delete document" / reset capability removes a doc's vectors and cached files cleanly
 
@@ -121,7 +121,7 @@ Deferred — explicitly out of scope for the POC, tracked for future.
 | SETUP-01 | Phase 1: Skeleton + NIM Client | Pending |
 | SETUP-02 | Phase 1: Skeleton + NIM Client | Pending |
 | SETUP-03 | Phase 1: Skeleton + NIM Client | Pending |
-| SETUP-04 | Phase 2: Extraction, OCR, Chunking & Vector Store | Pending |
+| SETUP-04 | Phase 2: Extraction, OCR, Chunking & Vector Store | Complete |
 | SETUP-05 | Phase 1: Skeleton + NIM Client | Pending |
 | LLM-01 | Phase 1: Skeleton + NIM Client | Pending |
 | LLM-02 | Phase 1: Skeleton + NIM Client | Pending |
@@ -129,15 +129,15 @@ Deferred — explicitly out of scope for the POC, tracked for future.
 | LLM-04 | Phase 1: Skeleton + NIM Client | Pending |
 | LLM-05 | Phase 1: Skeleton + NIM Client | Pending |
 | INGEST-01 | Phase 3: Ingestion Pipeline + Upload UI | Pending |
-| INGEST-02 | Phase 2: Extraction, OCR, Chunking & Vector Store | Pending |
-| INGEST-03 | Phase 2: Extraction, OCR, Chunking & Vector Store | Pending |
+| INGEST-02 | Phase 2: Extraction, OCR, Chunking & Vector Store | Complete |
+| INGEST-03 | Phase 2: Extraction, OCR, Chunking & Vector Store | Complete |
 | INGEST-04 | Phase 3: Ingestion Pipeline + Upload UI | Pending |
 | INGEST-05 | Phase 3: Ingestion Pipeline + Upload UI | Pending |
 | INGEST-06 | Phase 3: Ingestion Pipeline + Upload UI | Pending |
-| IDX-01 | Phase 2: Extraction, OCR, Chunking & Vector Store | Pending |
-| IDX-02 | Phase 2: Extraction, OCR, Chunking & Vector Store | Pending |
-| IDX-03 | Phase 2: Extraction, OCR, Chunking & Vector Store | Pending |
-| IDX-04 | Phase 2: Extraction, OCR, Chunking & Vector Store | Pending |
+| IDX-01 | Phase 2: Extraction, OCR, Chunking & Vector Store | Complete |
+| IDX-02 | Phase 2: Extraction, OCR, Chunking & Vector Store | Complete |
+| IDX-03 | Phase 2: Extraction, OCR, Chunking & Vector Store | Complete |
+| IDX-04 | Phase 2: Extraction, OCR, Chunking & Vector Store | Complete |
 | IDX-05 | Phase 3: Ingestion Pipeline + Upload UI | Pending |
 | IDX-06 | Phase 3: Ingestion Pipeline + Upload UI | Pending |
 | QA-01 | Phase 4: Q&A Retrieval + Chat with Citations | Pending |

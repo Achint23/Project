@@ -1,6 +1,6 @@
 # Project State: DocBot
 
-**Last updated:** 2026-04-28
+**Last updated:** 2026-04-28 (Phase 2 complete)
 
 ## Project Reference
 
@@ -9,25 +9,25 @@
 - **Requirements doc:** `.planning/REQUIREMENTS.md`
 - **Roadmap doc:** `.planning/ROADMAP.md`
 - **Core value:** A user can drop a document into a local web app, ask questions in natural language, get summaries, and see entities/relationships extracted — with one-command setup.
-- **Current focus:** Phase 2 — Extraction, OCR, Chunking & Vector Store
+- **Current focus:** Phase 3 — Ingestion Pipeline + Upload UI
 
 ## Current Position
 
 - **Milestone:** v1 POC
-- **Current phase:** Phase 2 — Extraction, OCR, Chunking & Vector Store
-- **Current plan:** none yet (run `/gsd-plan-phase 2`)
-- **Status:** Phase 1 complete; awaiting phase 2 planning
-- **Progress:** 1/7 phases complete
+- **Current phase:** Phase 3 — Ingestion Pipeline + Upload UI
+- **Current plan:** none yet (run `/gsd-plan-phase 3`)
+- **Status:** Phase 2 complete; awaiting phase 3 planning
+- **Progress:** 2/7 phases complete
 
 ```
-[█░░░░░░] 1/7 phases
+[██░░░░░] 2/7 phases
 ```
 
 ## Performance Metrics
 
-- Phases completed: 1
-- Plans completed: 3
-- Requirements validated: 9/42 (SETUP-01, SETUP-02, SETUP-03, SETUP-05, LLM-01, LLM-02, LLM-03, LLM-04, LLM-05)
+- Phases completed: 2
+- Plans completed: 6
+- Requirements validated: 16/42 (SETUP-01, SETUP-02, SETUP-03, SETUP-04, SETUP-05, LLM-01, LLM-02, LLM-03, LLM-04, LLM-05, INGEST-02, INGEST-03, IDX-01, IDX-02, IDX-03, IDX-04)
 - Requirements invalidated: 0
 
 ## Accumulated Context
@@ -41,6 +41,10 @@
 - PyMuPDF for text+layout extraction (AGPL acceptable for POC)
 - `openai` SDK against NIM's OpenAI-compatible endpoint (one client for chat + embeddings)
 - Streamlit `^1.40` UI with `@st.cache_resource` for heavy singletons
+- Pinned onnxruntime<1.24 for Python 3.10 compatibility (EasyOCR dependency)
+- Lazy EasyOCR init via property to avoid 2GB load until first OCR page
+- Tiktoken cl100k_base for token counting (close to Llama-3 budget)
+- Embedder dim=1024 hardcoded for nv-embedqa-e5-v5
 
 ### Open Todos
 
@@ -63,12 +67,12 @@
 ### Last Session
 
 - **Date:** 2026-04-28
-- **Activity:** Executed Phase 1 — created project scaffold (pyproject.toml, Makefile, .env.local.example, app.py), core/config.py (Pydantic settings), core/llm_client.py (NIMClient with retry/JSON-mode/batched-embeddings), smoke tests, and unit tests (9 passing).
-- **Next:** `/gsd-plan-phase 2`
+- **Activity:** Executed Phase 2 — created PDF extraction (PyMuPDF text + tables + OCR threshold), EasyOCR lazy wrapper, structure-aware chunker (tiktoken, 700/100 tokens), Embedder wrapper, ChromaDB vector store with model-metadata validation. 35 tests passing.
+- **Next:** `/gsd-plan-phase 3`
 
 ### Resume Notes
 
-To resume: run `/gsd-progress` for a status snapshot, then `/gsd-plan-phase 2` to begin planning Phase 2 (Extraction, OCR, Chunking & Vector Store). Phase 1 is complete with all code in place. Integration smoke tests require a valid `.env.local` with NVIDIA_API_KEY.
+To resume: run `/gsd-progress` for a status snapshot, then `/gsd-plan-phase 3` to begin planning Phase 3 (Ingestion Pipeline + Upload UI). Phase 2 is complete with all extraction, chunking, and vectorstore code in place.
 
 ---
 *State initialized: 2026-04-28*

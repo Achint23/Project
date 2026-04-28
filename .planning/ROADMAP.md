@@ -8,7 +8,7 @@
 ## Phases
 
 - [x] **Phase 1: Skeleton + NIM Client** — Project scaffolding, ≤3-command setup, and a resilient NVIDIA NIM client with retry/backoff/JSON-mode/batched embeddings
-- [ ] **Phase 2: Extraction, OCR, Chunking & Vector Store** — Text-first PDF extraction with OCR fallback, structure-aware chunker, and ChromaDB persistence with embedding-model metadata
+- [x] **Phase 2: Extraction, OCR, Chunking & Vector Store** — Text-first PDF extraction with OCR fallback, structure-aware chunker, and ChromaDB persistence with embedding-model metadata
 - [ ] **Phase 3: Ingestion Pipeline + Upload UI** — End-to-end ingest pipeline with content-hash dedupe and a Streamlit upload + document-list UI
 - [ ] **Phase 4: Q&A Retrieval + Chat with Citations** — Grounded chat over indexed corpus with inline `[chunk_id]` citations and hallucination flagging
 - [ ] **Phase 5: Summarization + Graph Extraction** — Map-reduce summaries plus prompt-based entity/relationship/process-step extraction with Pydantic validation and node-edge view
@@ -52,9 +52,9 @@ Plans:
 **Research during planning**: no (PITFALLS.md + ARCHITECTURE.md cover the patterns)
 
 Plans:
-- [ ] 02-01-PLAN.md — Dependencies, PDF extraction & OCR with EasyOCR pre-download
-- [ ] 02-02-PLAN.md — Structure-aware token-based chunker
-- [ ] 02-03-PLAN.md — Embedder & ChromaDB vector store with model validation
+- [x] 02-01-PLAN.md — Dependencies, PDF extraction & OCR with EasyOCR pre-download
+- [x] 02-02-PLAN.md — Structure-aware token-based chunker
+- [x] 02-03-PLAN.md — Embedder & ChromaDB vector store with model validation
 
 ### Phase 3: Ingestion Pipeline + Upload UI
 **Goal**: A user can drag-and-drop a document (or load a sample) and see it processed, indexed, and listed in the UI — re-uploads are idempotent.
