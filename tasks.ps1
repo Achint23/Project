@@ -8,7 +8,7 @@
 
 param(
     [Parameter(Position = 0)]
-    [ValidateSet("setup", "run", "clean", "doctor", "test", "help")]
+    [ValidateSet("setup", "run", "clean", "doctor", "test", "demo", "help")]
     [string]$Command = "help"
 )
 
@@ -18,6 +18,9 @@ function Invoke-Setup {
     Write-Host "  Downloading EasyOCR weights (first time only)..." -ForegroundColor Cyan
     uv run python -c "import easyocr; easyocr.Reader(['en'], gpu=False)"
     Write-Host "  EasyOCR weights downloaded." -ForegroundColor Green
+    Write-Host "  Installing Playwright browsers..." -ForegroundColor Cyan
+    uv run playwright install chromium
+    Write-Host "  Playwright Chromium installed." -ForegroundColor Green
     Write-Host "  Copy .env.local.example to .env.local and add your NVIDIA_API_KEY." -ForegroundColor Yellow
 }
 
@@ -64,6 +67,34 @@ function Invoke-Test {
     uv run pytest tests/ -x -q
 }
 
+function Invoke-Demo {
+    Write-Host "=== DocBot E2E Demo Dry-Run ===" -ForegroundColor Cyan
+    $streamlitProcess = Start-Process -FilePath "uv" -ArgumentList "run", "streamlit", "run", "app.py", "--server.headless", "true" -PassThru -WindowStyle Hidden
+    Write-Host "  Waiting for Streamlit server..." -ForegroundColor Cyan
+    $ready = $false
+    for ($i = 0; $i -lt 30; $i++) {
+        try {
+            $response = Invoke-WebRequest -Uri "http://localhost:8501/_stcore/health" -UseBasicParsing -TimeoutSec 2 -ErrorAction Stop
+            if ($response.StatusCode -eq 200) { $ready = $true; break }
+        } catch { }
+        Start-Sleep -Seconds 1
+    }
+    if (-not $ready) {
+        Write-Host "✗ Streamlit server failed to start within 30s." -ForegroundColor Red
+        if (-not $streamlitProcess.HasExited) { Stop-Process -Id $streamlitProcess.Id -Force }
+        exit 1
+    }
+    Write-Host "  Streamlit server ready. Running E2E tests..." -ForegroundColor Green
+    uv run pytest tests/test_e2e_demo.py -x -q
+    $testExit = $LASTEXITCODE
+    if (-not $streamlitProcess.HasExited) { Stop-Process -Id $streamlitProcess.Id -Force }
+    if ($testExit -ne 0) {
+        Write-Host "✗ E2E demo dry-run failed." -ForegroundColor Red
+        exit 1
+    }
+    Write-Host "`n✓ E2E demo dry-run passed." -ForegroundColor Green
+}
+
 function Show-Help {
     Write-Host @"
 
@@ -77,6 +108,7 @@ function Show-Help {
     clean   Remove generated/cached files
     doctor  Verify environment + NIM connectivity
     test    Run all tests
+    demo    Run automated E2E demo dry-run (Playwright)
 
 "@ -ForegroundColor Cyan
 }
@@ -87,5 +119,6 @@ switch ($Command) {
     "clean"  { Invoke-Clean }
     "doctor" { Invoke-Doctor }
     "test"   { Invoke-Test }
+    "demo"   { Invoke-Demo }
     "help"   { Show-Help }
 }
