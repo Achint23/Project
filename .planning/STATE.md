@@ -1,6 +1,6 @@
 # Project State: DocBot
 
-**Last updated:** 2026-04-28 (Phase 6 complete)
+**Last updated:** 2026-04-28 (Phase 7 context gathered)
 
 ## Project Reference
 
@@ -9,14 +9,14 @@
 - **Requirements doc:** `.planning/REQUIREMENTS.md`
 - **Roadmap doc:** `.planning/ROADMAP.md`
 - **Core value:** A user can drop a document into a local web app, ask questions in natural language, get summaries, and see entities/relationships extracted — with one-command setup.
-- **Current focus:** Phase 6 — Model Routing + Side-by-Side Comparison
+- **Current focus:** Phase 7 — Demo Polish & End-to-End UX
 
 ## Current Position
 
 - **Milestone:** v1 POC
-- **Current phase:** Phase 6 — Model Routing + Side-by-Side Comparison (COMPLETE)
-- **Current plan:** Plan 02 complete; Phase 6 done — ready for Phase 7
-- **Status:** Phase 6 complete — all 2 plans done (router + pipeline metadata, UI + comparison panel)
+- **Current phase:** Phase 7 — Demo Polish & End-to-End UX (CONTEXT GATHERED)
+- **Current plan:** Context gathered — ready for planning
+- **Status:** Phase 7 context captured — 18 decisions across docs, Playwright E2E, dry-run automation, UI polish
 - **Progress:** 6/7 phases complete
 
 ```
