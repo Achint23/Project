@@ -43,11 +43,18 @@ SAMPLE_CHUNKS = [
 ]
 
 
-def _mock_llm_response(content: str) -> MagicMock:
+def _mock_llm_response(content: str, prompt_tokens: int = 0, completion_tokens: int = 0, model: str = "") -> MagicMock:
     """Create a mock ChatCompletion response."""
     response = MagicMock()
     response.choices = [MagicMock()]
     response.choices[0].message.content = content
+    if prompt_tokens or completion_tokens:
+        response.usage.prompt_tokens = prompt_tokens
+        response.usage.completion_tokens = completion_tokens
+        response.usage.total_tokens = prompt_tokens + completion_tokens
+    else:
+        response.usage = None
+    response.model = model or None
     return response
 
 
@@ -288,3 +295,58 @@ class TestRunQuery:
         result = run_query("Q?", vs, nim)
 
         assert result.hallucinated_ids == ["face00_chunk_9"]
+
+
+# ---------------------------------------------------------------------------
+# Metadata extraction tests
+# ---------------------------------------------------------------------------
+
+class TestRunQueryMetadata:
+    @patch("pipelines.query._load_prompt_template")
+    @patch("pipelines.query.retrieve")
+    def test_run_query_returns_metadata(self, mock_retrieve, mock_template):
+        mock_retrieve.return_value = SAMPLE_CHUNKS
+        mock_template.return_value = "Context: {context}\nQuestion: {question}"
+
+        nim = MagicMock()
+        nim.chat.return_value = _mock_llm_response(
+            "Answer [abc123_chunk_0].", prompt_tokens=100, completion_tokens=50, model="test-model"
+        )
+        vs = MagicMock()
+
+        result = run_query("What?", vs, nim)
+
+        assert result.model_used == "test-model"
+        assert result.prompt_tokens == 100
+        assert result.completion_tokens == 50
+        assert result.latency_ms > 0
+
+    @patch("pipelines.query._load_prompt_template")
+    @patch("pipelines.query.retrieve")
+    def test_run_query_with_explicit_model(self, mock_retrieve, mock_template):
+        mock_retrieve.return_value = SAMPLE_CHUNKS
+        mock_template.return_value = "Context: {context}\nQuestion: {question}"
+
+        nim = MagicMock()
+        nim.chat.return_value = _mock_llm_response("Answer.", prompt_tokens=10, completion_tokens=5, model="custom-model")
+        vs = MagicMock()
+
+        run_query("What?", vs, nim, model="custom-model")
+
+        call_kwargs = nim.chat.call_args[1]
+        assert call_kwargs["model"] == "custom-model"
+
+    @patch("pipelines.query._load_prompt_template")
+    @patch("pipelines.query.retrieve")
+    def test_run_query_handles_missing_usage(self, mock_retrieve, mock_template):
+        mock_retrieve.return_value = SAMPLE_CHUNKS
+        mock_template.return_value = "Context: {context}\nQuestion: {question}"
+
+        nim = MagicMock()
+        nim.chat.return_value = _mock_llm_response("Answer.")  # usage=None
+        vs = MagicMock()
+
+        result = run_query("What?", vs, nim)
+
+        assert result.prompt_tokens == 0
+        assert result.completion_tokens == 0

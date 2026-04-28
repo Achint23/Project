@@ -44,7 +44,7 @@ VALID_EXTRACTION_DICT = {
 }
 
 
-def _make_mock_chat(return_text: str):
+def _make_mock_chat(return_text: str, prompt_tokens: int = 0, completion_tokens: int = 0, model: str = ""):
     """Create a mock chat response object."""
     msg = MagicMock()
     msg.content = return_text
@@ -52,6 +52,13 @@ def _make_mock_chat(return_text: str):
     choice.message = msg
     response = MagicMock()
     response.choices = [choice]
+    if prompt_tokens or completion_tokens:
+        response.usage.prompt_tokens = prompt_tokens
+        response.usage.completion_tokens = completion_tokens
+        response.usage.total_tokens = prompt_tokens + completion_tokens
+    else:
+        response.usage = None
+    response.model = model or None
     return response
 
 
@@ -283,3 +290,43 @@ class TestFormatPydanticErrors:
     def test_non_validation_error_returns_str(self):
         result = _format_pydantic_errors(ValueError("something broke"))
         assert result == "something broke"
+
+
+# ---------------------------------------------------------------------------
+# 12. Metadata extraction tests
+# ---------------------------------------------------------------------------
+
+class TestRunGraphExtractionMetadata:
+    @patch("pipelines.graph._load_prompt", return_value="{context}")
+    def test_run_graph_returns_metadata(self, _mock_prompt):
+        mock_vs = MagicMock()
+        mock_vs.get_all_by_doc.return_value = _make_chunks(["The HR Manager reviews leave."])
+
+        valid_json = json.dumps(VALID_EXTRACTION_DICT)
+        mock_nim = MagicMock()
+        mock_nim.chat.return_value = _make_mock_chat(
+            valid_json, prompt_tokens=200, completion_tokens=100, model="graph-model"
+        )
+
+        result = run_graph_extraction("doc1", mock_vs, mock_nim)
+
+        assert result.model_used == "graph-model"
+        assert result.prompt_tokens == 200
+        assert result.completion_tokens == 100
+        assert result.latency_ms > 0
+
+    @patch("pipelines.graph._load_prompt", return_value="{context}")
+    def test_run_graph_with_explicit_model(self, _mock_prompt):
+        mock_vs = MagicMock()
+        mock_vs.get_all_by_doc.return_value = _make_chunks(["Some text."])
+
+        valid_json = json.dumps(VALID_EXTRACTION_DICT)
+        mock_nim = MagicMock()
+        mock_nim.chat.return_value = _make_mock_chat(
+            valid_json, prompt_tokens=10, completion_tokens=5, model="explicit-model"
+        )
+
+        run_graph_extraction("doc1", mock_vs, mock_nim, model="explicit-model")
+
+        call_kwargs = mock_nim.chat.call_args[1]
+        assert call_kwargs["model"] == "explicit-model"

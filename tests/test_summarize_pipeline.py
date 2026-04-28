@@ -12,7 +12,7 @@ from pipelines.summarize import (
 )
 
 
-def _make_mock_chat(return_text: str = "Mock summary"):
+def _make_mock_chat(return_text: str = "Mock summary", prompt_tokens: int = 0, completion_tokens: int = 0, model: str = ""):
     """Create a mock chat response object."""
     msg = MagicMock()
     msg.content = return_text
@@ -20,6 +20,13 @@ def _make_mock_chat(return_text: str = "Mock summary"):
     choice.message = msg
     response = MagicMock()
     response.choices = [choice]
+    if prompt_tokens or completion_tokens:
+        response.usage.prompt_tokens = prompt_tokens
+        response.usage.completion_tokens = completion_tokens
+        response.usage.total_tokens = prompt_tokens + completion_tokens
+    else:
+        response.usage = None
+    response.model = model or None
     return response
 
 
@@ -112,3 +119,43 @@ class TestRunSummarizeErrorHandling:
         assert result.error is not None
         assert "API connection failed" in result.error
         assert result.summary == ""
+
+
+# ---------------------------------------------------------------------------
+# Metadata extraction tests
+# ---------------------------------------------------------------------------
+
+class TestRunSummarizeMetadata:
+    @patch("pipelines.summarize._count_tokens", return_value=100)
+    def test_run_summarize_returns_metadata(self, mock_tokens):
+        mock_vs = MagicMock()
+        mock_vs.get_all_by_doc.return_value = [
+            {"text": "Short chunk.", "chunk_id": "c1", "doc_id": "doc1", "page_num": 1, "chunk_type": "text"},
+        ]
+        mock_nim = MagicMock()
+        mock_nim.chat.return_value = _make_mock_chat(
+            "Summary.", prompt_tokens=80, completion_tokens=40, model="test-model"
+        )
+
+        result = run_summarize("doc1", mock_vs, mock_nim)
+
+        assert result.model_used == "test-model"
+        assert result.prompt_tokens == 80
+        assert result.completion_tokens == 40
+        assert result.latency_ms > 0
+
+    @patch("pipelines.summarize._count_tokens", return_value=100)
+    def test_run_summarize_with_explicit_model(self, mock_tokens):
+        mock_vs = MagicMock()
+        mock_vs.get_all_by_doc.return_value = [
+            {"text": "Short chunk.", "chunk_id": "c1", "doc_id": "doc1", "page_num": 1, "chunk_type": "text"},
+        ]
+        mock_nim = MagicMock()
+        mock_nim.chat.return_value = _make_mock_chat(
+            "Summary.", prompt_tokens=10, completion_tokens=5, model="explicit-model"
+        )
+
+        run_summarize("doc1", mock_vs, mock_nim, model="explicit-model")
+
+        call_kwargs = mock_nim.chat.call_args[1]
+        assert call_kwargs["model"] == "explicit-model"
