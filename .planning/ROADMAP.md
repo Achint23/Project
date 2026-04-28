@@ -47,9 +47,14 @@ Plans:
   3. Chunks land at ~500–800 tokens with ~100–150 overlap and never split across tables, lists, or headings; tables and headings are emitted as atomic chunks tagged with `chunk_type` metadata.
   4. Embedding calls are batched (32–64 chunks/request) and persisted to a ChromaDB `PersistentClient` collection with telemetry off and `doc_id` metadata.
   5. The collection records `embedding_model` and `embedding_dim`; on startup, a model/dim mismatch is detected and reported clearly.
-**Plans**: TBD
+**Plans:** 3 plans
 **UI hint**: no
 **Research during planning**: no (PITFALLS.md + ARCHITECTURE.md cover the patterns)
+
+Plans:
+- [ ] 02-01-PLAN.md — Dependencies, PDF extraction & OCR with EasyOCR pre-download
+- [ ] 02-02-PLAN.md — Structure-aware token-based chunker
+- [ ] 02-03-PLAN.md — Embedder & ChromaDB vector store with model validation
 
 ### Phase 3: Ingestion Pipeline + Upload UI
 **Goal**: A user can drag-and-drop a document (or load a sample) and see it processed, indexed, and listed in the UI — re-uploads are idempotent.
