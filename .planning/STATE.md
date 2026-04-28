@@ -15,8 +15,8 @@
 
 - **Milestone:** v1 POC
 - **Current phase:** Phase 4 — Q&A Retrieval + Chat with Citations
-- **Current plan:** none yet (run `/gsd-plan-phase 4`)
-- **Status:** Phase 3 complete; awaiting phase 4 planning
+- **Current plan:** 3 plans created (run `/gsd-execute-phase 4`)
+- **Status:** Phase 4 planned; awaiting execution
 - **Progress:** 3/7 phases complete
 
 ```

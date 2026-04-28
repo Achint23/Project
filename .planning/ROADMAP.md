@@ -85,9 +85,14 @@ Plans:
   3. A post-hoc check validates every cited `chunk_id` against the retrieval log and flags hallucinated citations in the UI.
   4. Top-k=3–5 retrieval supports `doc_id` filtering, and chunks are reordered so the highest-scored chunk appears first AND last in the prompt.
   5. NVIDIA API errors (rate limit, 504, auth) surface as readable messages via `st.error` instead of crashing the app.
-**Plans**: TBD
+**Plans:** 3 plans
 **UI hint**: yes
 **Research during planning**: no (standard grounded-RAG pattern, citation validation documented in PITFALLS #8)
+
+Plans:
+- [ ] 04-01-PLAN.md — Retriever module with top-k reordering + grounded QA prompt template
+- [ ] 04-02-PLAN.md — Query pipeline with citation parsing and post-hoc validation
+- [ ] 04-03-PLAN.md — Streamlit chat UI with expandable citations, hallucination flags, and API error handling
 
 ### Phase 5: Summarization + Graph Extraction
 **Goal**: From any indexed document a user can produce a business-readable summary AND a validated entity/relationship/process-step JSON rendered as both a table and a node/edge view.
