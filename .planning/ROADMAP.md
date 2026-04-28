@@ -140,9 +140,13 @@ Plans:
   1. The Streamlit UI exposes upload, document list, chat, summarize, graph view, routing toggle, and routing comparison panel from a single browser session without page reloads.
   2. The README quickstart documents the end-to-end demo flow (load sample → process → ask → summarize → extract graph → compare direct vs routed) and walks a new user from clone to demo unaided.
   3. A demo dry-run on a fresh Windows or macOS machine completes the full flow successfully against the bundled sample set.
-**Plans**: TBD
+**Plans:** 2 plans
 **UI hint**: yes
 **Research during planning**: no (Streamlit conventions documented in PITFALLS #11)
+
+Plans:
+- [ ] 07-01-PLAN.md — README documentation (install, demo walkthrough, troubleshooting, architecture)
+- [ ] 07-02-PLAN.md — Playwright E2E tests, demo dry-run command, UI polish verification
 
 ## Progress
 
@@ -154,7 +158,7 @@ Plans:
 | 4. Q&A Retrieval + Chat with Citations | 3/3 | Complete | 2026-04-28 |
 | 5. Summarization + Graph Extraction | 3/3 | Complete | 2026-04-28 |
 | 6. Model Routing + Side-by-Side Comparison | 2/2 | Complete | 2026-04-28 |
-| 7. Demo Polish & End-to-End UX | 0/0 | Not started | - |
+| 7. Demo Polish & End-to-End UX | 0/2 | Planned | - |
 
 ## Coverage
 
