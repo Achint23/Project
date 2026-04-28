@@ -66,9 +66,14 @@ Plans:
   3. Re-uploading the same file produces no duplicate vectors (content-hash dedupe).
   4. User can delete an indexed document and its vectors + cached files are removed cleanly.
   5. Heavy resources (LLM client, EasyOCR Reader, Chroma client) are wrapped in `@st.cache_resource` and survive Streamlit reruns without re-instantiation.
-**Plans**: TBD
+**Plans:** 3 plans
 **UI hint**: yes
 **Research during planning**: no (pure composition over phase 1–2)
+
+Plans:
+- [ ] 03-01-PLAN.md — Ingest pipeline module with content-hash dedupe, extract/chunk/persist orchestration, and delete
+- [ ] 03-02-PLAN.md — Streamlit upload UI, sidebar document list, sample loader, @st.cache_resource singletons
+- [ ] 03-03-PLAN.md — Sample documents, IDX-05 doc_id filter test, Streamlit server config
 
 ### Phase 4: Q&A Retrieval + Chat with Citations
 **Goal**: A user can ask natural-language questions in chat and get grounded, citation-backed answers — with hallucinated citations visibly flagged.
