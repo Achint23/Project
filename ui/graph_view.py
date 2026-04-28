@@ -144,9 +144,9 @@ def render_graph_view(vectorstore, nim_client) -> None:
             st.error("Rate limit exceeded. Please wait a moment and try again.")
         except openai.AuthenticationError:
             st.error("Authentication failed. Check your NVIDIA API key.")
-        except openai.APIConnectionError:
-            st.error("Connection error. Check your network and NVIDIA endpoint.")
         except openai.APITimeoutError:
             st.error("Request timed out. The server may be overloaded — try again.")
+        except openai.APIConnectionError:
+            st.error("Connection error. Check your network and NVIDIA endpoint.")
         except openai.APIStatusError as exc:
             st.error(f"API error ({exc.status_code}): {exc.message}")
