@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -21,6 +22,11 @@ class QueryResult:
     citations: list[dict] = field(default_factory=list)
     hallucinated_ids: list[str] = field(default_factory=list)
     retrieved_chunks: list[RetrievedChunk] = field(default_factory=list)
+    model_used: str = ""
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
+    latency_ms: float = 0.0
+    route_reason: str = ""
 
 
 def _load_prompt_template() -> str:
@@ -61,6 +67,7 @@ def run_query(
     nim_client: NIMClient,
     n_results: int = 5,
     doc_id: str | None = None,
+    model: str | None = None,
 ) -> QueryResult:
     """Run the full Q&A pipeline: retrieve → prompt → LLM → parse → validate.
 
@@ -85,12 +92,20 @@ def run_query(
     template = _load_prompt_template()
     prompt = template.format(context=_format_context(chunks), question=question)
 
+    t0 = time.perf_counter()
     response = nim_client.chat(
         messages=[{"role": "user", "content": prompt}],
         temperature=0.3,
         max_tokens=1024,
+        model=model,
     )
+    latency_ms = (time.perf_counter() - t0) * 1000
     answer = response.choices[0].message.content
+
+    usage = response.usage
+    p_tokens = usage.prompt_tokens if usage else 0
+    c_tokens = usage.completion_tokens if usage else 0
+    model_used = response.model or ""
 
     cited_ids = _parse_citations(answer)
     retrieved_ids = {c.chunk_id for c in chunks}
@@ -122,4 +137,8 @@ def run_query(
         citations=citations,
         hallucinated_ids=deduped_hallucinated,
         retrieved_chunks=chunks,
+        model_used=model_used,
+        prompt_tokens=p_tokens,
+        completion_tokens=c_tokens,
+        latency_ms=latency_ms,
     )

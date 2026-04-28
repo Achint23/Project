@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import time
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -27,6 +28,11 @@ class SummaryResult:
     chunk_count: int
     method: str  # "direct" or "map_reduce"
     error: str | None = None
+    model_used: str = ""
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
+    latency_ms: float = 0.0
+    route_reason: str = ""
 
 
 def _count_tokens(text: str) -> int:
@@ -39,20 +45,36 @@ def _load_prompt(name: str) -> str:
     return Path(f"prompts/{name}").read_text(encoding="utf-8")
 
 
-def _summarize_direct(text: str, nim_client: NIMClient) -> str:
-    """Summarize text directly using the reduce/summary prompt."""
+def _summarize_direct(text: str, nim_client: NIMClient, model: str | None = None) -> tuple[str, int, int, str]:
+    """Summarize text directly using the reduce/summary prompt.
+
+    Returns (summary_text, prompt_tokens, completion_tokens, model_used).
+    """
     prompt = _load_prompt("summary_reduce.txt").format(text=text)
     response = nim_client.chat(
         messages=[{"role": "user", "content": prompt}],
         temperature=0.3,
         max_tokens=1024,
+        model=model,
     )
-    return response.choices[0].message.content
+    usage = response.usage
+    return (
+        response.choices[0].message.content,
+        usage.prompt_tokens if usage else 0,
+        usage.completion_tokens if usage else 0,
+        response.model or "",
+    )
 
 
-def _map_reduce(chunks: list[dict], nim_client: NIMClient) -> str:
-    """Summarize via map-reduce: summarize each chunk, then combine."""
+def _map_reduce(chunks: list[dict], nim_client: NIMClient, model: str | None = None) -> tuple[str, int, int, str]:
+    """Summarize via map-reduce: summarize each chunk, then combine.
+
+    Returns (summary_text, total_prompt_tokens, total_completion_tokens, model_used).
+    """
     map_prompt_template = _load_prompt("summary_map.txt")
+    total_p = 0
+    total_c = 0
+    model_used = ""
 
     # Map step: summarize each chunk individually
     partials: list[str] = []
@@ -62,8 +84,13 @@ def _map_reduce(chunks: list[dict], nim_client: NIMClient) -> str:
             messages=[{"role": "user", "content": prompt}],
             temperature=0.3,
             max_tokens=512,
+            model=model,
         )
         partials.append(response.choices[0].message.content)
+        usage = response.usage
+        total_p += usage.prompt_tokens if usage else 0
+        total_c += usage.completion_tokens if usage else 0
+        model_used = response.model or model_used
 
     # Reduce step: combine all partial summaries
     combined = "\n\n---\n\n".join(partials)
@@ -72,14 +99,20 @@ def _map_reduce(chunks: list[dict], nim_client: NIMClient) -> str:
         messages=[{"role": "user", "content": reduce_prompt}],
         temperature=0.3,
         max_tokens=1024,
+        model=model,
     )
-    return response.choices[0].message.content
+    usage = response.usage
+    total_p += usage.prompt_tokens if usage else 0
+    total_c += usage.completion_tokens if usage else 0
+    model_used = response.model or model_used
+    return response.choices[0].message.content, total_p, total_c, model_used
 
 
 def run_summarize(
     doc_id: str,
     vectorstore: VectorStore,
     nim_client: NIMClient,
+    model: str | None = None,
 ) -> SummaryResult:
     """Run the summarization pipeline for a document.
 
@@ -100,18 +133,24 @@ def run_summarize(
         total_text = "\n\n".join(c["text"] for c in chunks)
         total_tokens = _count_tokens(total_text)
 
+        t0 = time.perf_counter()
         if total_tokens <= TOKEN_BUDGET:
-            summary = _summarize_direct(total_text, nim_client)
+            summary, p_tokens, c_tokens, model_used = _summarize_direct(total_text, nim_client, model)
             method = "direct"
         else:
-            summary = _map_reduce(chunks, nim_client)
+            summary, p_tokens, c_tokens, model_used = _map_reduce(chunks, nim_client, model)
             method = "map_reduce"
+        latency_ms = (time.perf_counter() - t0) * 1000
 
         return SummaryResult(
             summary=summary,
             doc_id=doc_id,
             chunk_count=len(chunks),
             method=method,
+            model_used=model_used,
+            prompt_tokens=p_tokens,
+            completion_tokens=c_tokens,
+            latency_ms=latency_ms,
         )
     except Exception as exc:
         logger.exception("Summarization failed for doc_id=%s", doc_id)

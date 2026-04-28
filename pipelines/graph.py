@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -97,6 +98,10 @@ class GraphResult:
     dedup_merges: int = 0
     method: str = "single_pass"
     error: str | None = None
+    model_used: str = ""
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
+    latency_ms: float = 0.0
 
 
 # ---------------------------------------------------------------------------
@@ -120,21 +125,29 @@ def _format_pydantic_errors(e: Exception) -> str:
 
 
 def _extract_with_retry(
-    context: str, nim_client: NIMClient
-) -> GraphExtraction:
-    """Extract graph from context with one self-correction retry on parse failure."""
+    context: str, nim_client: NIMClient, model: str | None = None
+) -> tuple[GraphExtraction, int, int, str]:
+    """Extract graph from context with one self-correction retry on parse failure.
+
+    Returns (extraction, total_prompt_tokens, total_completion_tokens, model_used).
+    """
     prompt = _load_prompt("graph_extract.txt").format(context=context)
     response = nim_client.chat(
         messages=[{"role": "user", "content": prompt}],
         temperature=0.2,
         max_tokens=4096,
         json_mode=True,
+        model=model,
     )
     raw = response.choices[0].message.content
+    usage = response.usage
+    total_p = usage.prompt_tokens if usage else 0
+    total_c = usage.completion_tokens if usage else 0
+    model_used = response.model or ""
 
     try:
         data = json.loads(raw)
-        return GraphExtraction.model_validate(data)
+        return GraphExtraction.model_validate(data), total_p, total_c, model_used
     except (json.JSONDecodeError, ValidationError) as first_error:
         logger.warning("First extraction attempt failed: %s — retrying with correction prompt", first_error)
         correction_prompt = _load_prompt("graph_correct.txt").format(
@@ -146,10 +159,15 @@ def _extract_with_retry(
             temperature=0.1,
             max_tokens=4096,
             json_mode=True,
+            model=model,
         )
         retry_raw = retry_response.choices[0].message.content
+        retry_usage = retry_response.usage
+        total_p += retry_usage.prompt_tokens if retry_usage else 0
+        total_c += retry_usage.completion_tokens if retry_usage else 0
+        model_used = retry_response.model or model_used
         retry_data = json.loads(retry_raw)
-        return GraphExtraction.model_validate(retry_data)
+        return GraphExtraction.model_validate(retry_data), total_p, total_c, model_used
 
 
 def deduplicate_entities(
@@ -235,6 +253,7 @@ def run_graph_extraction(
     doc_id: str,
     vectorstore: VectorStore,
     nim_client: NIMClient,
+    model: str | None = None,
 ) -> GraphResult:
     """Run the graph extraction pipeline for a document.
 
@@ -250,7 +269,9 @@ def run_graph_extraction(
             )
 
         context = "\n\n".join(c["text"] for c in chunks)
-        extraction = _extract_with_retry(context, nim_client)
+        t0 = time.perf_counter()
+        extraction, p_tokens, c_tokens, model_used = _extract_with_retry(context, nim_client, model)
+        latency_ms = (time.perf_counter() - t0) * 1000
 
         canonical_entities, name_map = deduplicate_entities(extraction.entities)
         dedup_merges = len(extraction.entities) - len(canonical_entities)
@@ -264,6 +285,10 @@ def run_graph_extraction(
             entity_count=len(canonical_entities),
             dedup_merges=dedup_merges,
             method="single_pass",
+            model_used=model_used,
+            prompt_tokens=p_tokens,
+            completion_tokens=c_tokens,
+            latency_ms=latency_ms,
         )
     except Exception as exc:
         logger.exception("Graph extraction failed for doc_id=%s", doc_id)
