@@ -12,7 +12,7 @@
 - [x] **Phase 3: Ingestion Pipeline + Upload UI** — End-to-end ingest pipeline with content-hash dedupe and a Streamlit upload + document-list UI
 - [x] **Phase 4: Q&A Retrieval + Chat with Citations** — Grounded chat over indexed corpus with inline `[chunk_id]` citations and hallucination flagging
 - [x] **Phase 5: Summarization + Graph Extraction** — Map-reduce summaries plus prompt-based entity/relationship/process-step extraction with Pydantic validation and node-edge view
-- [ ] **Phase 6: Model Routing + Side-by-Side Comparison** — Pure-function router, manual/auto toggle, and parallel direct-vs-routed comparison panel
+- [x] **Phase 6: Model Routing + Side-by-Side Comparison** — Pure-function router, manual/auto toggle, and parallel direct-vs-routed comparison panel
 - [ ] **Phase 7: Demo Polish & End-to-End UX** — Unified single-session demo flow, README quickstart, and demo-readiness checks
 
 ## Phase Details
