@@ -9,7 +9,7 @@
 
 - [x] **Phase 1: Skeleton + NIM Client** — Project scaffolding, ≤3-command setup, and a resilient NVIDIA NIM client with retry/backoff/JSON-mode/batched embeddings
 - [x] **Phase 2: Extraction, OCR, Chunking & Vector Store** — Text-first PDF extraction with OCR fallback, structure-aware chunker, and ChromaDB persistence with embedding-model metadata
-- [ ] **Phase 3: Ingestion Pipeline + Upload UI** — End-to-end ingest pipeline with content-hash dedupe and a Streamlit upload + document-list UI
+- [x] **Phase 3: Ingestion Pipeline + Upload UI** — End-to-end ingest pipeline with content-hash dedupe and a Streamlit upload + document-list UI
 - [ ] **Phase 4: Q&A Retrieval + Chat with Citations** — Grounded chat over indexed corpus with inline `[chunk_id]` citations and hallucination flagging
 - [ ] **Phase 5: Summarization + Graph Extraction** — Map-reduce summaries plus prompt-based entity/relationship/process-step extraction with Pydantic validation and node-edge view
 - [ ] **Phase 6: Model Routing + Side-by-Side Comparison** — Pure-function router, manual/auto toggle, and parallel direct-vs-routed comparison panel
@@ -71,9 +71,9 @@ Plans:
 **Research during planning**: no (pure composition over phase 1–2)
 
 Plans:
-- [ ] 03-01-PLAN.md — Ingest pipeline module with content-hash dedupe, extract/chunk/persist orchestration, and delete
-- [ ] 03-02-PLAN.md — Streamlit upload UI, sidebar document list, sample loader, @st.cache_resource singletons
-- [ ] 03-03-PLAN.md — Sample documents, IDX-05 doc_id filter test, Streamlit server config
+- [x] 03-01-PLAN.md — Ingest pipeline module with content-hash dedupe, extract/chunk/persist orchestration, and delete
+- [x] 03-02-PLAN.md — Streamlit upload UI, sidebar document list, sample loader, @st.cache_resource singletons
+- [x] 03-03-PLAN.md — Sample documents, IDX-05 doc_id filter test, Streamlit server config
 
 ### Phase 4: Q&A Retrieval + Chat with Citations
 **Goal**: A user can ask natural-language questions in chat and get grounded, citation-backed answers — with hallucinated citations visibly flagged.

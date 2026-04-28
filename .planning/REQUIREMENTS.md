@@ -25,12 +25,12 @@ Requirements for the POC release. Each maps to roadmap phases.
 
 ### Document Ingestion
 
-- [ ] **INGEST-01**: User can upload PDF, scanned PDF, and image-based document files via the web UI
+- [x] **INGEST-01**: User can upload PDF, scanned PDF, and image-based document files via the web UI
 - [x] **INGEST-02**: System auto-detects scanned/image pages and routes them to OCR (EasyOCR) while sending text-PDF pages to direct extraction
 - [x] **INGEST-03**: Text-PDF extraction uses PyMuPDF and preserves paragraph structure plus basic table content
-- [ ] **INGEST-04**: A small bundled set of sample documents (digital PDF, scanned PDF, multi-column, table-heavy) ships in `data/samples/` and can be loaded with one click
-- [ ] **INGEST-05**: Re-uploading the same file is idempotent (content-hash dedupe — no duplicate vectors)
-- [ ] **INGEST-06**: Upload UI shows progress (`st.status`) and surfaces errors clearly
+- [x] **INGEST-04**: A small bundled set of sample documents (digital PDF, scanned PDF, multi-column, table-heavy) ships in `data/samples/` and can be loaded with one click
+- [x] **INGEST-05**: Re-uploading the same file is idempotent (content-hash dedupe — no duplicate vectors)
+- [x] **INGEST-06**: Upload UI shows progress (`st.status`) and surfaces errors clearly
 
 ### Indexing & Retrieval
 
@@ -38,8 +38,8 @@ Requirements for the POC release. Each maps to roadmap phases.
 - [x] **IDX-02**: Tables and headings are emitted as atomic chunks with `chunk_type` metadata
 - [x] **IDX-03**: Chunks are embedded via NVIDIA NIM and persisted to ChromaDB (`PersistentClient`, telemetry off, single collection with `doc_id` metadata)
 - [x] **IDX-04**: ChromaDB collection metadata stores `embedding_model` and `embedding_dim`; mismatch on startup is detected and reported
-- [ ] **IDX-05**: Semantic top-k retrieval (k=3–5) supports filtering by `doc_id`
-- [ ] **IDX-06**: A "delete document" / reset capability removes a doc's vectors and cached files cleanly
+- [x] **IDX-05**: Semantic top-k retrieval (k=3–5) supports filtering by `doc_id`
+- [x] **IDX-06**: A “delete document” / reset capability removes a doc’s vectors and cached files cleanly
 
 ### Q&A
 
@@ -73,7 +73,7 @@ Requirements for the POC release. Each maps to roadmap phases.
 
 - [ ] **UX-01**: Streamlit (or Gradio) web UI exposes upload, document list, chat, summarize, graph view, routing toggle, and routing comparison panel from a single browser session
 - [ ] **UX-02**: NVIDIA API errors (rate limit, 504 timeout, auth) are surfaced as readable messages via `st.error`
-- [ ] **UX-03**: Heavy resources (LLM client, EasyOCR Reader, Chroma client) are wrapped in `@st.cache_resource` so Streamlit reruns don't re-instantiate them
+- [x] **UX-03**: Heavy resources (LLM client, EasyOCR Reader, Chroma client) are wrapped in `@st.cache_resource` so Streamlit reruns don’t re-instantiate them
 - [ ] **UX-04**: A README quickstart documents the end-to-end demo flow: load sample → process → ask question → summarize → extract graph → compare direct vs routed
 
 ## v2 Requirements
@@ -128,18 +128,18 @@ Deferred — explicitly out of scope for the POC, tracked for future.
 | LLM-03 | Phase 1: Skeleton + NIM Client | Pending |
 | LLM-04 | Phase 1: Skeleton + NIM Client | Pending |
 | LLM-05 | Phase 1: Skeleton + NIM Client | Pending |
-| INGEST-01 | Phase 3: Ingestion Pipeline + Upload UI | Pending |
+| INGEST-01 | Phase 3: Ingestion Pipeline + Upload UI | Complete |
 | INGEST-02 | Phase 2: Extraction, OCR, Chunking & Vector Store | Complete |
 | INGEST-03 | Phase 2: Extraction, OCR, Chunking & Vector Store | Complete |
-| INGEST-04 | Phase 3: Ingestion Pipeline + Upload UI | Pending |
-| INGEST-05 | Phase 3: Ingestion Pipeline + Upload UI | Pending |
-| INGEST-06 | Phase 3: Ingestion Pipeline + Upload UI | Pending |
+| INGEST-04 | Phase 3: Ingestion Pipeline + Upload UI | Complete |
+| INGEST-05 | Phase 3: Ingestion Pipeline + Upload UI | Complete |
+| INGEST-06 | Phase 3: Ingestion Pipeline + Upload UI | Complete |
 | IDX-01 | Phase 2: Extraction, OCR, Chunking & Vector Store | Complete |
 | IDX-02 | Phase 2: Extraction, OCR, Chunking & Vector Store | Complete |
 | IDX-03 | Phase 2: Extraction, OCR, Chunking & Vector Store | Complete |
 | IDX-04 | Phase 2: Extraction, OCR, Chunking & Vector Store | Complete |
-| IDX-05 | Phase 3: Ingestion Pipeline + Upload UI | Pending |
-| IDX-06 | Phase 3: Ingestion Pipeline + Upload UI | Pending |
+| IDX-05 | Phase 3: Ingestion Pipeline + Upload UI | Complete |
+| IDX-06 | Phase 3: Ingestion Pipeline + Upload UI | Complete |
 | QA-01 | Phase 4: Q&A Retrieval + Chat with Citations | Pending |
 | QA-02 | Phase 4: Q&A Retrieval + Chat with Citations | Pending |
 | QA-03 | Phase 4: Q&A Retrieval + Chat with Citations | Pending |
@@ -158,7 +158,7 @@ Deferred — explicitly out of scope for the POC, tracked for future.
 | ROUTE-05 | Phase 6: Model Routing + Side-by-Side Comparison | Pending |
 | UX-01 | Phase 7: Demo Polish & End-to-End UX | Pending |
 | UX-02 | Phase 4: Q&A Retrieval + Chat with Citations | Pending |
-| UX-03 | Phase 3: Ingestion Pipeline + Upload UI | Pending |
+| UX-03 | Phase 3: Ingestion Pipeline + Upload UI | Complete |
 | UX-04 | Phase 7: Demo Polish & End-to-End UX | Pending |
 
 **Coverage:**
