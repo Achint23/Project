@@ -99,6 +99,27 @@ class VectorStore:
         """Delete all chunks for a given document."""
         self._collection.delete(where={"doc_id": doc_id})
 
+    def get_all_by_doc(self, doc_id: str) -> list[dict]:
+        """Return all chunks for a given document as a list of dicts."""
+        results = self._collection.get(
+            where={"doc_id": doc_id},
+            include=["documents", "metadatas"],
+        )
+        if not results["ids"]:
+            return []
+        return [
+            {
+                "chunk_id": cid,
+                "text": text,
+                "doc_id": meta.get("doc_id", doc_id),
+                "page_num": meta.get("page_num", 0),
+                "chunk_type": meta.get("chunk_type", "text"),
+            }
+            for cid, text, meta in zip(
+                results["ids"], results["documents"], results["metadatas"]
+            )
+        ]
+
     def count(self) -> int:
         """Return total number of chunks in the collection."""
         return self._collection.count()

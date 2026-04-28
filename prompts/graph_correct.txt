@@ -1,0 +1,9 @@
+The following JSON output was produced but failed validation. Fix the JSON to match the required schema.
+
+Original output:
+{original_output}
+
+Error:
+{error_message}
+
+Return ONLY the corrected JSON object. No explanations. Ensure all required fields are present and types are correct.

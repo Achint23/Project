@@ -1,0 +1,4 @@
+Summarize the following text section in 2-3 concise sentences. Focus on key facts, conclusions, and actionable information. Do not add information not present in the text.
+
+Text:
+{text}
