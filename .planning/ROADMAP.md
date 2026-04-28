@@ -27,7 +27,13 @@
   3. `.env.local.example` is committed and the app reads `NVIDIA_API_KEY`, `NVIDIA_BASE_URL`, `NVIDIA_MODEL`, `NVIDIA_ROUTE_MODEL`, `NVIDIA_EMBED_MODEL` from `.env.local`.
   4. A smoke test makes a JSON-mode chat round-trip against NVIDIA NIM and exits 0.
   5. The LLM client survives an injected 429/504 via exponential-backoff-with-jitter retry within a 60s timeout.
-**Plans**: TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Project scaffolding, packaging, env config, Streamlit skeleton
+- [ ] 01-02-PLAN.md — NVIDIA NIM LLM client with retry, JSON mode, batched embeddings
+- [ ] 01-03-PLAN.md — Smoke test, .gitignore, doctor target
+
 **UI hint**: no
 **Research during planning**: no (test-nvidia.mjs is the in-repo reference)
 
