@@ -3,6 +3,7 @@
 import streamlit as st
 
 from ui.chat import render_chat
+from ui.comparison import render_comparison
 from ui.graph_view import render_graph_view
 from ui.sidebar import render_sidebar
 from ui.summary_view import render_summary_view
@@ -25,7 +26,7 @@ render_sidebar(vectorstore)
 render_upload_ui(vectorstore, ocr_reader)
 render_sample_loader(vectorstore, ocr_reader)
 
-chat_tab, summary_tab, graph_tab = st.tabs(["💬 Chat", "📝 Summary", "🕸️ Graph"])
+chat_tab, summary_tab, graph_tab, compare_tab = st.tabs(["💬 Chat", "📝 Summary", "🕸️ Graph", "🔄 Compare"])
 
 with chat_tab:
     render_chat(vectorstore, nim_client)
@@ -35,3 +36,6 @@ with summary_tab:
 
 with graph_tab:
     render_graph_view(vectorstore, nim_client)
+
+with compare_tab:
+    render_comparison(vectorstore, nim_client)
