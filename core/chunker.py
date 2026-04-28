@@ -68,8 +68,8 @@ def chunk_text(
     text: str,
     doc_id: str,
     page_num: int,
-    max_tokens: int = 700,
-    overlap_tokens: int = 100,
+    max_tokens: int = 450,
+    overlap_tokens: int = 50,
 ) -> list[dict]:
     """Split text into chunks respecting structure boundaries.
 
@@ -77,8 +77,8 @@ def chunk_text(
         text: The text to chunk.
         doc_id: Document identifier for metadata.
         page_num: Page number for metadata.
-        max_tokens: Maximum tokens per chunk (default 700).
-        overlap_tokens: Token overlap between consecutive chunks (default 100).
+        max_tokens: Maximum tokens per chunk (default 450, keeps under embedding model 512 limit).
+        overlap_tokens: Token overlap between consecutive chunks (default 50).
 
     Returns:
         List of chunk dicts with text, doc_id, page_num, chunk_type, chunk_index.
