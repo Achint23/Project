@@ -20,6 +20,9 @@ class _SessionState:
     def __contains__(self, key):
         return key in self.__dict__
 
+    def get(self, key, default=None):
+        return self.__dict__.get(key, default)
+
 
 def _make_query_result(
     answer: str = "Test answer [abc123_chunk_0].",
@@ -117,11 +120,15 @@ class TestRenderChatErrorHandling:
         assistant_ctx.__exit__ = MagicMock(return_value=False)
         mock_st.chat_message.side_effect = [user_ctx, assistant_ctx]
 
+    @patch("ui.chat.get_settings")
+    @patch("ui.chat.route")
     @patch("ui.chat.run_query")
     @patch("ui.chat.st")
-    def test_rate_limit_error(self, mock_st, mock_run_query):
+    def test_rate_limit_error(self, mock_st, mock_run_query, mock_route, mock_settings):
         import openai
         self._setup_mocks(mock_st)
+        mock_settings.return_value = MagicMock(nvidia_model="large", nvidia_route_model="small")
+        mock_route.return_value = MagicMock(model="large", reason="test")
         mock_run_query.side_effect = openai.RateLimitError(
             message="rate limited", response=MagicMock(status_code=429), body=None
         )
@@ -132,11 +139,15 @@ class TestRenderChatErrorHandling:
         mock_st.error.assert_called_once()
         assert "rate limit" in mock_st.error.call_args[0][0].lower()
 
+    @patch("ui.chat.get_settings")
+    @patch("ui.chat.route")
     @patch("ui.chat.run_query")
     @patch("ui.chat.st")
-    def test_timeout_error(self, mock_st, mock_run_query):
+    def test_timeout_error(self, mock_st, mock_run_query, mock_route, mock_settings):
         import openai
         self._setup_mocks(mock_st)
+        mock_settings.return_value = MagicMock(nvidia_model="large", nvidia_route_model="small")
+        mock_route.return_value = MagicMock(model="large", reason="test")
         mock_run_query.side_effect = openai.APITimeoutError(request=MagicMock())
 
         from ui.chat import render_chat
@@ -145,11 +156,15 @@ class TestRenderChatErrorHandling:
         mock_st.error.assert_called_once()
         assert "timed out" in mock_st.error.call_args[0][0].lower()
 
+    @patch("ui.chat.get_settings")
+    @patch("ui.chat.route")
     @patch("ui.chat.run_query")
     @patch("ui.chat.st")
-    def test_auth_error(self, mock_st, mock_run_query):
+    def test_auth_error(self, mock_st, mock_run_query, mock_route, mock_settings):
         import openai
         self._setup_mocks(mock_st)
+        mock_settings.return_value = MagicMock(nvidia_model="large", nvidia_route_model="small")
+        mock_route.return_value = MagicMock(model="large", reason="test")
         mock_run_query.side_effect = openai.AuthenticationError(
             message="bad key", response=MagicMock(status_code=401), body=None
         )
@@ -160,11 +175,15 @@ class TestRenderChatErrorHandling:
         mock_st.error.assert_called_once()
         assert "authentication" in mock_st.error.call_args[0][0].lower()
 
+    @patch("ui.chat.get_settings")
+    @patch("ui.chat.route")
     @patch("ui.chat.run_query")
     @patch("ui.chat.st")
-    def test_connection_error(self, mock_st, mock_run_query):
+    def test_connection_error(self, mock_st, mock_run_query, mock_route, mock_settings):
         import openai
         self._setup_mocks(mock_st)
+        mock_settings.return_value = MagicMock(nvidia_model="large", nvidia_route_model="small")
+        mock_route.return_value = MagicMock(model="large", reason="test")
         mock_run_query.side_effect = openai.APIConnectionError(request=MagicMock())
 
         from ui.chat import render_chat
@@ -173,11 +192,15 @@ class TestRenderChatErrorHandling:
         mock_st.error.assert_called_once()
         assert "connect" in mock_st.error.call_args[0][0].lower()
 
+    @patch("ui.chat.get_settings")
+    @patch("ui.chat.route")
     @patch("ui.chat.run_query")
     @patch("ui.chat.st")
-    def test_api_status_error(self, mock_st, mock_run_query):
+    def test_api_status_error(self, mock_st, mock_run_query, mock_route, mock_settings):
         import openai
         self._setup_mocks(mock_st)
+        mock_settings.return_value = MagicMock(nvidia_model="large", nvidia_route_model="small")
+        mock_route.return_value = MagicMock(model="large", reason="test")
         resp = MagicMock()
         resp.status_code = 503
         mock_run_query.side_effect = openai.APIStatusError(
@@ -190,11 +213,15 @@ class TestRenderChatErrorHandling:
         mock_st.error.assert_called_once()
         assert "503" in mock_st.error.call_args[0][0]
 
+    @patch("ui.chat.get_settings")
+    @patch("ui.chat.route")
     @patch("ui.chat.run_query")
     @patch("ui.chat.st")
-    def test_error_appended_to_history(self, mock_st, mock_run_query):
+    def test_error_appended_to_history(self, mock_st, mock_run_query, mock_route, mock_settings):
         import openai
         self._setup_mocks(mock_st)
+        mock_settings.return_value = MagicMock(nvidia_model="large", nvidia_route_model="small")
+        mock_route.return_value = MagicMock(model="large", reason="test")
         mock_run_query.side_effect = openai.APIConnectionError(request=MagicMock())
 
         from ui.chat import render_chat
@@ -210,11 +237,15 @@ class TestRenderChatErrorHandling:
 # ---------------------------------------------------------------------------
 
 class TestRenderChatSuccess:
+    @patch("ui.chat.get_settings")
+    @patch("ui.chat.route")
     @patch("ui.chat.run_query")
     @patch("ui.chat.st")
-    def test_successful_query_appends_to_history(self, mock_st, mock_run_query):
+    def test_successful_query_appends_to_history(self, mock_st, mock_run_query, mock_route, mock_settings):
         mock_st.session_state = _SessionState(chat_messages=[])
         mock_st.chat_input.return_value = "What is this?"
+        mock_settings.return_value = MagicMock(nvidia_model="large", nvidia_route_model="small")
+        mock_route.return_value = MagicMock(model="large", reason="test")
 
         user_ctx = MagicMock()
         user_ctx.__enter__ = MagicMock(return_value=user_ctx)
@@ -236,6 +267,8 @@ class TestRenderChatSuccess:
         assert messages[1]["role"] == "assistant"
         assert messages[1]["content"] == result.answer
         assert messages[1]["citations"] == result.citations
+        assert "metadata" in messages[1]
+        assert "route_reason" in messages[1]
 
     @patch("ui.chat.run_query")
     @patch("ui.chat.st")

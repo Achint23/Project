@@ -6,7 +6,9 @@ import streamlit as st
 import pandas as pd
 import openai
 
+from core.config import get_settings
 from pipelines.graph import GraphExtraction, GraphResult, run_graph_extraction
+from routers.model_router import TaskType, route
 from streamlit_agraph import agraph, Node, Edge, Config
 
 _TYPE_COLORS = {
@@ -114,9 +116,19 @@ def render_graph_view(vectorstore, nim_client) -> None:
 
     if st.button("🔍 Extract Graph", key="extract_btn"):
         try:
+            settings = get_settings()
+            mode = st.session_state.get("model_routing_mode", "auto")
+            if mode == "small (route)":
+                model = settings.nvidia_route_model
+            elif mode == "large (direct)":
+                model = settings.nvidia_model
+            else:
+                decision = route(TaskType.GRAPH_EXTRACT, settings.nvidia_model, settings.nvidia_route_model)
+                model = decision.model
+
             with st.status("Extracting graph data...", expanded=True) as status:
                 result: GraphResult = run_graph_extraction(
-                    selected_doc_id, vectorstore, nim_client
+                    selected_doc_id, vectorstore, nim_client, model=model
                 )
                 if result.error:
                     st.error(result.error)
@@ -128,6 +140,11 @@ def render_graph_view(vectorstore, nim_client) -> None:
                     f"Chunks: {result.chunk_count} | "
                     f"Dedup merges: {result.dedup_merges} | "
                     f"Method: {result.method}"
+                )
+                st.caption(
+                    f"🤖 {result.model_used or 'N/A'} | "
+                    f"⏱️ {result.latency_ms:.0f}ms | "
+                    f"📊 {result.prompt_tokens + result.completion_tokens} tokens"
                 )
 
             table_tab, graph_tab, process_tab = st.tabs(

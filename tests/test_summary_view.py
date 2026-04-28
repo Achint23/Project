@@ -54,7 +54,11 @@ class TestRenderSummaryViewSuccess:
     def test_successful_summarization(self):
         result = _make_summary_result()
         with patch("ui.summary_view.st") as mock_st, \
-             patch("ui.summary_view.run_summarize", return_value=result):
+             patch("ui.summary_view.run_summarize", return_value=result), \
+             patch("ui.summary_view.get_settings") as mock_settings, \
+             patch("ui.summary_view.route") as mock_route:
+            mock_settings.return_value = MagicMock(nvidia_model="large", nvidia_route_model="small")
+            mock_route.return_value = MagicMock(model="large", reason="test")
             mock_st.session_state = MagicMock()
             mock_st.session_state.get.return_value = _docs_list()
             mock_st.selectbox.return_value = "abc123"
@@ -78,7 +82,11 @@ class TestRenderSummaryViewError:
     def test_shows_error_on_failure(self):
         result = _make_summary_result(error="No chunks found for document.")
         with patch("ui.summary_view.st") as mock_st, \
-             patch("ui.summary_view.run_summarize", return_value=result):
+             patch("ui.summary_view.run_summarize", return_value=result), \
+             patch("ui.summary_view.get_settings") as mock_settings, \
+             patch("ui.summary_view.route") as mock_route:
+            mock_settings.return_value = MagicMock(nvidia_model="large", nvidia_route_model="small")
+            mock_route.return_value = MagicMock(model="large", reason="test")
             mock_st.session_state = MagicMock()
             mock_st.session_state.get.return_value = _docs_list()
             mock_st.selectbox.return_value = "abc123"
@@ -114,7 +122,11 @@ class TestRenderSummaryViewApiErrors:
         )
 
         with patch("ui.summary_view.st") as mock_st, \
-             patch("ui.summary_view.run_summarize", side_effect=exc):
+             patch("ui.summary_view.run_summarize", side_effect=exc), \
+             patch("ui.summary_view.get_settings") as mock_settings, \
+             patch("ui.summary_view.route") as mock_route:
+            mock_settings.return_value = MagicMock(nvidia_model="large", nvidia_route_model="small")
+            mock_route.return_value = MagicMock(model="large", reason="test")
             mock_st.session_state = MagicMock()
             mock_st.session_state.get.return_value = _docs_list()
             mock_st.selectbox.return_value = "abc123"

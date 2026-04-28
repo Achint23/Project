@@ -80,7 +80,11 @@ class TestRenderGraphViewError:
     def test_shows_error_on_failure(self):
         result = _make_graph_result(error="NIM extraction failed")
         with patch("ui.graph_view.st") as mock_st, \
-             patch("ui.graph_view.run_graph_extraction", return_value=result):
+             patch("ui.graph_view.run_graph_extraction", return_value=result), \
+             patch("ui.graph_view.get_settings") as mock_settings, \
+             patch("ui.graph_view.route") as mock_route:
+            mock_settings.return_value = MagicMock(nvidia_model="large", nvidia_route_model="small")
+            mock_route.return_value = MagicMock(model="large", reason="test")
             mock_st.session_state = MagicMock()
             mock_st.session_state.get.return_value = _docs_list()
             mock_st.selectbox.return_value = "abc123"
@@ -113,7 +117,11 @@ class TestRenderGraphViewApiErrors:
         )
 
         with patch("ui.graph_view.st") as mock_st, \
-             patch("ui.graph_view.run_graph_extraction", side_effect=exc):
+             patch("ui.graph_view.run_graph_extraction", side_effect=exc), \
+             patch("ui.graph_view.get_settings") as mock_settings, \
+             patch("ui.graph_view.route") as mock_route:
+            mock_settings.return_value = MagicMock(nvidia_model="large", nvidia_route_model="small")
+            mock_route.return_value = MagicMock(model="large", reason="test")
             mock_st.session_state = MagicMock()
             mock_st.session_state.get.return_value = _docs_list()
             mock_st.selectbox.return_value = "abc123"

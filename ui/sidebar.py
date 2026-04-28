@@ -1,4 +1,4 @@
-"""Sidebar with document list and delete functionality."""
+"""Sidebar with document list, delete functionality, and model routing toggle."""
 
 from __future__ import annotations
 
@@ -34,3 +34,15 @@ def render_sidebar(vectorstore):
                     d for d in st.session_state.documents if d["doc_id"] != doc["doc_id"]
                 ]
                 st.rerun()
+
+        st.divider()
+        st.subheader("🔀 Model Routing")
+        st.radio(
+            "Model selection",
+            options=["auto", "small (route)", "large (direct)"],
+            index=0,
+            key="model_routing_mode",
+            help="**auto**: router picks model by task type and doc size. "
+            "**small**: always use the faster route model. "
+            "**large**: always use the large direct model.",
+        )

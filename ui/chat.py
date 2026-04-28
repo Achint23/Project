@@ -5,7 +5,24 @@ from __future__ import annotations
 import openai
 import streamlit as st
 
+from core.config import get_settings
 from pipelines.query import QueryResult, run_query
+from routers.model_router import TaskType, route
+
+
+def _resolve_model(task: TaskType) -> tuple[str, str]:
+    """Resolve model name and route reason from session routing mode.
+
+    Returns (model_name, route_reason).
+    """
+    settings = get_settings()
+    mode = st.session_state.get("model_routing_mode", "auto")
+    if mode == "small (route)":
+        return settings.nvidia_route_model, ""
+    if mode == "large (direct)":
+        return settings.nvidia_model, ""
+    decision = route(task, settings.nvidia_model, settings.nvidia_route_model)
+    return decision.model, decision.reason
 
 
 def _init_chat():
@@ -42,6 +59,10 @@ def render_chat(vectorstore, nim_client):
             st.markdown(msg["content"])
             if msg["role"] == "assistant" and "citations" in msg:
                 _render_citations(msg["citations"], msg.get("hallucinated_ids", []))
+                if msg.get("metadata"):
+                    st.caption(msg["metadata"])
+                if msg.get("route_reason"):
+                    st.caption(f"🔀 {msg['route_reason']}")
 
     # Accept new input
     question = st.chat_input("Ask a question about your documents")
@@ -52,7 +73,9 @@ def render_chat(vectorstore, nim_client):
 
         with st.chat_message("assistant"):
             try:
-                result = run_query(question, vectorstore, nim_client)
+                model, route_reason = _resolve_model(TaskType.QA)
+                result = run_query(question, vectorstore, nim_client, model=model)
+                result.route_reason = route_reason
             except openai.RateLimitError:
                 err = "⚠️ NVIDIA API rate limit reached. Please wait a moment and try again."
                 st.error(err)
@@ -91,11 +114,23 @@ def render_chat(vectorstore, nim_client):
 
             st.markdown(result.answer)
             _render_citations(result.citations, result.hallucinated_ids)
+
+            metadata_str = (
+                f"🤖 {result.model_used or 'N/A'} | "
+                f"⏱️ {result.latency_ms:.0f}ms | "
+                f"📊 {result.prompt_tokens + result.completion_tokens} tokens"
+            )
+            st.caption(metadata_str)
+            if result.route_reason:
+                st.caption(f"🔀 {result.route_reason}")
+
             st.session_state.chat_messages.append(
                 {
                     "role": "assistant",
                     "content": result.answer,
                     "citations": result.citations,
                     "hallucinated_ids": result.hallucinated_ids,
+                    "metadata": metadata_str,
+                    "route_reason": result.route_reason,
                 }
             )
