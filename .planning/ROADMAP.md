@@ -92,7 +92,7 @@ Plans:
 Plans:
 - [x] 04-01-PLAN.md — Retriever module with top-k reordering + grounded QA prompt template
 - [x] 04-02-PLAN.md — Query pipeline with citation parsing and post-hoc validation
-- [ ] 04-03-PLAN.md — Streamlit chat UI with expandable citations, hallucination flags, and API error handling
+- [x] 04-03-PLAN.md — Streamlit chat UI with expandable citations, hallucination flags, and API error handling
 
 ### Phase 5: Summarization + Graph Extraction
 **Goal**: From any indexed document a user can produce a business-readable summary AND a validated entity/relationship/process-step JSON rendered as both a table and a node/edge view.

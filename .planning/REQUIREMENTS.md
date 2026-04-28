@@ -43,9 +43,9 @@ Requirements for the POC release. Each maps to roadmap phases.
 
 ### Q&A
 
-- [ ] **QA-01**: User can ask natural-language questions against the indexed document corpus through a chat UI
+- [x] **QA-01**: User can ask natural-language questions against the indexed document corpus through a chat UI
 - [x] **QA-02**: Answers are generated using a grounded prompt that instructs the model to answer only from retrieved context and respond "I don't know" otherwise
-- [ ] **QA-03**: Each answer renders inline citations (`[chunk_id]`) with expandable source-chunk previews showing page number and original text
+- [x] **QA-03**: Each answer renders inline citations (`[chunk_id]`) with expandable source-chunk previews showing page number and original text
 - [x] **QA-04**: A post-hoc check validates every cited `chunk_id` against the retrieval log and flags hallucinated citations in the UI
 - [x] **QA-05**: Retrieved chunks are reordered so the highest-scored chunk appears first AND last in the prompt (anti "lost in the middle")
 
@@ -72,7 +72,7 @@ Requirements for the POC release. Each maps to roadmap phases.
 ### Demo & UX
 
 - [ ] **UX-01**: Streamlit (or Gradio) web UI exposes upload, document list, chat, summarize, graph view, routing toggle, and routing comparison panel from a single browser session
-- [ ] **UX-02**: NVIDIA API errors (rate limit, 504 timeout, auth) are surfaced as readable messages via `st.error`
+- [x] **UX-02**: NVIDIA API errors (rate limit, 504 timeout, auth) are surfaced as readable messages via `st.error`
 - [x] **UX-03**: Heavy resources (LLM client, EasyOCR Reader, Chroma client) are wrapped in `@st.cache_resource` so Streamlit reruns don’t re-instantiate them
 - [ ] **UX-04**: A README quickstart documents the end-to-end demo flow: load sample → process → ask question → summarize → extract graph → compare direct vs routed
 
