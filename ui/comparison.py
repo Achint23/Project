@@ -16,6 +16,17 @@ def render_comparison(vectorstore, nim_client) -> None:
         st.info("Upload a document first to compare models.")
         return
 
+    # Sticky headers for comparison columns
+    st.markdown(
+        "<style>"
+        "[data-testid='stHorizontalBlock'] [data-testid='stSubheader'] {"
+        "  position: sticky; top: 0; background: var(--background-color);"
+        "  z-index: 1; padding-bottom: 0.5rem;"
+        "}"
+        "</style>",
+        unsafe_allow_html=True,
+    )
+
     question = st.text_input(
         "Ask a question to compare models", key="compare_question"
     )

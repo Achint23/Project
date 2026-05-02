@@ -7,6 +7,7 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 
+import openai
 import tiktoken
 
 from core.llm_client import NIMClient
@@ -119,6 +120,7 @@ def run_summarize(
     Uses direct summarization if total tokens fit within TOKEN_BUDGET,
     otherwise falls back to map-reduce.
     """
+    _chunk_count = 0
     try:
         chunks = vectorstore.get_all_by_doc(doc_id)
         if not chunks:
@@ -129,6 +131,7 @@ def run_summarize(
                 method="direct",
                 error="No chunks found for document.",
             )
+        _chunk_count = len(chunks)
 
         total_text = "\n\n".join(c["text"] for c in chunks)
         total_tokens = _count_tokens(total_text)
@@ -145,19 +148,21 @@ def run_summarize(
         return SummaryResult(
             summary=summary,
             doc_id=doc_id,
-            chunk_count=len(chunks),
+            chunk_count=_chunk_count,
             method=method,
             model_used=model_used,
             prompt_tokens=p_tokens,
             completion_tokens=c_tokens,
             latency_ms=latency_ms,
         )
+    except openai.APIError:
+        raise
     except Exception as exc:
         logger.exception("Summarization failed for doc_id=%s", doc_id)
         return SummaryResult(
             summary="",
             doc_id=doc_id,
-            chunk_count=0,
+            chunk_count=_chunk_count,
             method="direct",
             error=str(exc),
         )

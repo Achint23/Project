@@ -52,7 +52,7 @@ class VectorStore:
                 f"uses dim={self._embedder.dim}. Delete data/chroma/ and re-ingest."
             )
 
-    def add(self, chunks: list[dict], doc_id: str):
+    def add(self, chunks: list[dict], doc_id: str, filename: str = ""):
         """Add chunks to the collection with embeddings and metadata."""
         if not chunks:
             return
@@ -63,6 +63,7 @@ class VectorStore:
         metadatas = [
             {
                 "doc_id": doc_id,
+                "filename": filename,
                 "page_num": c["page_num"],
                 "chunk_type": c.get("chunk_type", "text"),
                 "chunk_index": c.get("chunk_index", i),
@@ -119,6 +120,33 @@ class VectorStore:
                 results["ids"], results["documents"], results["metadatas"]
             )
         ]
+
+    def list_documents(self) -> list[dict]:
+        """Return a list of all indexed documents with doc_id, filename, and chunk_count.
+
+        Scans the collection metadata to reconstruct the document list.
+        """
+        results = self._collection.get(include=["metadatas"])
+        if not results["ids"]:
+            return []
+
+        doc_chunks: dict[str, int] = {}
+        doc_filenames: dict[str, str] = {}
+        for meta in results["metadatas"]:
+            did = meta.get("doc_id", "")
+            if did:
+                doc_chunks[did] = doc_chunks.get(did, 0) + 1
+                # Store the filename from the first chunk that has it
+                if did not in doc_filenames and meta.get("filename"):
+                    doc_filenames[did] = meta["filename"]
+
+        docs = []
+        for doc_id, chunk_count in doc_chunks.items():
+            filename = doc_filenames.get(doc_id, f"{doc_id[:12]}....pdf")
+            docs.append(
+                {"doc_id": doc_id, "filename": filename, "chunk_count": chunk_count}
+            )
+        return docs
 
     def count(self) -> int:
         """Return total number of chunks in the collection."""

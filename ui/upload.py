@@ -43,14 +43,26 @@ def get_vectorstore():
 
 
 def _init_documents():
-    """Ensure session_state.documents list exists."""
+    """Ensure session_state.documents list exists, restoring from ChromaDB if needed."""
     if "documents" not in st.session_state:
         st.session_state.documents = []
+
+
+def _restore_documents_from_store(vectorstore):
+    """On first run, scan ChromaDB for previously indexed documents."""
+    if st.session_state.get("_docs_restored"):
+        return
+    if not st.session_state.documents:
+        existing = vectorstore.list_documents()
+        if existing:
+            st.session_state.documents = existing
+    st.session_state._docs_restored = True
 
 
 def render_upload_ui(vectorstore, ocr_reader):
     """Render the PDF upload widget with progress tracking."""
     _init_documents()
+    _restore_documents_from_store(vectorstore)
 
     uploaded = st.file_uploader("Upload a PDF document", type=["pdf"], key="doc_upload")
     if uploaded is None:
@@ -97,6 +109,7 @@ def render_upload_ui(vectorstore, ocr_reader):
     st.session_state.documents.append(
         {"doc_id": doc_id, "filename": uploaded.name, "chunk_count": result.chunk_count}
     )
+    st.rerun()
 
 
 def render_sample_loader(vectorstore, ocr_reader):
@@ -152,3 +165,4 @@ def render_sample_loader(vectorstore, ocr_reader):
                     "chunk_count": result.chunk_count,
                 }
             )
+            st.rerun()

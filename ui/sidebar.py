@@ -13,9 +13,21 @@ def _init_documents():
         st.session_state.documents = []
 
 
+def _restore_documents_from_store(vectorstore):
+    """On first run, scan ChromaDB for previously indexed documents."""
+    if st.session_state.get("_docs_restored"):
+        return
+    if not st.session_state.documents:
+        existing = vectorstore.list_documents()
+        if existing:
+            st.session_state.documents = existing
+    st.session_state._docs_restored = True
+
+
 def render_sidebar(vectorstore):
     """Render sidebar with indexed document list and delete buttons."""
     _init_documents()
+    _restore_documents_from_store(vectorstore)
 
     with st.sidebar:
         st.header("📑 Documents")
@@ -33,6 +45,9 @@ def render_sidebar(vectorstore):
                 st.session_state.documents = [
                     d for d in st.session_state.documents if d["doc_id"] != doc["doc_id"]
                 ]
+                # Clear chat history that may reference deleted document chunks
+                if "chat_messages" in st.session_state:
+                    st.session_state.chat_messages = []
                 st.rerun()
 
         st.divider()

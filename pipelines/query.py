@@ -111,18 +111,21 @@ def run_query(
     retrieved_ids = {c.chunk_id for c in chunks}
     valid_ids, hallucinated_ids = _validate_citations(cited_ids, retrieved_ids)
 
-    # Build citation detail dicts for valid IDs
+    # Build citation detail dicts for valid IDs, deduplicated by chunk_id
     chunk_lookup = {c.chunk_id: c for c in chunks}
-    citations = [
-        {
-            "chunk_id": cid,
-            "text": chunk_lookup[cid].text,
-            "page_num": chunk_lookup[cid].page_num,
-            "chunk_type": chunk_lookup[cid].chunk_type,
-        }
-        for cid in valid_ids
-        if cid in chunk_lookup
-    ]
+    seen_cite_ids: set[str] = set()
+    citations: list[dict] = []
+    for cid in valid_ids:
+        if cid in chunk_lookup and cid not in seen_cite_ids:
+            seen_cite_ids.add(cid)
+            citations.append(
+                {
+                    "chunk_id": cid,
+                    "text": chunk_lookup[cid].text,
+                    "page_num": chunk_lookup[cid].page_num,
+                    "chunk_type": chunk_lookup[cid].chunk_type,
+                }
+            )
 
     # Deduplicate hallucinated IDs while preserving order
     seen = set()
@@ -132,8 +135,17 @@ def run_query(
             seen.add(hid)
             deduped_hallucinated.append(hid)
 
+    # Replace raw chunk IDs in the answer text with numeric labels [1], [2], …
+    # This must happen after citations list is built (which defines the numbering).
+    display_answer = answer
+    for idx, cite in enumerate(citations, start=1):
+        display_answer = display_answer.replace(f"[{cite['chunk_id']}]", f"[{idx}]")
+    # Strip any remaining chunk references — full-hash form OR LLM-abbreviated form
+    # e.g. "[abc123_chunk_3]", "[chunk_5]", "[chunk_5, chunk_1]"
+    display_answer = re.sub(r"\[[^\[\]]*chunk[^\[\]]*\]", "", display_answer).strip()
+
     return QueryResult(
-        answer=answer,
+        answer=display_answer,
         citations=citations,
         hallucinated_ids=deduped_hallucinated,
         retrieved_chunks=chunks,

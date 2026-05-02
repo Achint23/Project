@@ -86,7 +86,7 @@ class TestRenderCitations:
             _render_citations(citations, [])
 
             mock_st.caption.assert_called_once_with("📚 Sources:")
-            mock_st.expander.assert_called_once_with("[abc123_chunk_0] — page 1")
+            mock_st.expander.assert_called_once_with("[1] — page 1")
 
     def test_renders_hallucination_warnings(self):
         with patch("ui.chat.st") as mock_st:
@@ -96,7 +96,6 @@ class TestRenderCitations:
             mock_st.caption.assert_called_once_with("📚 Sources:")
             mock_st.warning.assert_called_once()
             warning_text = mock_st.warning.call_args[0][0]
-            assert "fake_chunk_99" in warning_text
             assert "possibly hallucinated" in warning_text
 
 

@@ -8,6 +8,7 @@ import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
+import openai
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from rapidfuzz import fuzz
@@ -290,6 +291,8 @@ def run_graph_extraction(
             completion_tokens=c_tokens,
             latency_ms=latency_ms,
         )
+    except openai.APIError:
+        raise
     except Exception as exc:
         logger.exception("Graph extraction failed for doc_id=%s", doc_id)
         return GraphResult(

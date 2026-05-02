@@ -222,3 +222,133 @@ class TestVectorStoreDocIdFilter:
         doc_ids = {m["doc_id"] for m in result["metadatas"][0]}
         assert "doc_a" in doc_ids
         assert "doc_b" in doc_ids
+
+
+class TestVectorStoreListDocuments:
+    """Tests for the list_documents method used for session persistence (F1 fix)."""
+
+    @patch("core.vectorstore.chromadb")
+    def test_list_documents_empty_collection(self, mock_chromadb):
+        """list_documents() returns empty list when no chunks exist."""
+        mock_client = MagicMock()
+        mock_chromadb.PersistentClient.return_value = mock_client
+
+        mock_collection = MagicMock()
+        mock_collection.get.return_value = {"ids": [], "metadatas": []}
+        mock_client.get_or_create_collection.return_value = mock_collection
+
+        mock_embedder = MagicMock()
+        mock_embedder.model = "nvidia/nv-embedqa-e5-v5"
+        mock_embedder.dim = 1024
+
+        from core.vectorstore import VectorStore
+        vs = VectorStore(persist_path="test_chroma", embedder=mock_embedder)
+        result = vs.list_documents()
+        assert result == []
+
+    @patch("core.vectorstore.chromadb")
+    def test_list_documents_groups_by_doc_id(self, mock_chromadb):
+        """list_documents() groups chunks by doc_id and returns chunk counts."""
+        mock_client = MagicMock()
+        mock_chromadb.PersistentClient.return_value = mock_client
+
+        mock_collection = MagicMock()
+        mock_collection.get.return_value = {
+            "ids": ["doc1_chunk_0", "doc1_chunk_1", "doc2_chunk_0"],
+            "metadatas": [
+                {"doc_id": "doc1", "filename": "report.pdf"},
+                {"doc_id": "doc1", "filename": "report.pdf"},
+                {"doc_id": "doc2", "filename": "invoice.pdf"},
+            ],
+        }
+        mock_client.get_or_create_collection.return_value = mock_collection
+
+        mock_embedder = MagicMock()
+        mock_embedder.model = "nvidia/nv-embedqa-e5-v5"
+        mock_embedder.dim = 1024
+
+        from core.vectorstore import VectorStore
+        vs = VectorStore(persist_path="test_chroma", embedder=mock_embedder)
+        result = vs.list_documents()
+        assert len(result) == 2
+
+        doc1 = next(d for d in result if d["doc_id"] == "doc1")
+        assert doc1["filename"] == "report.pdf"
+        assert doc1["chunk_count"] == 2
+
+        doc2 = next(d for d in result if d["doc_id"] == "doc2")
+        assert doc2["filename"] == "invoice.pdf"
+        assert doc2["chunk_count"] == 1
+
+    @patch("core.vectorstore.chromadb")
+    def test_list_documents_fallback_filename(self, mock_chromadb):
+        """list_documents() uses truncated doc_id when no filename in metadata."""
+        mock_client = MagicMock()
+        mock_chromadb.PersistentClient.return_value = mock_client
+
+        mock_collection = MagicMock()
+        mock_collection.get.return_value = {
+            "ids": ["abc123_chunk_0"],
+            "metadatas": [{"doc_id": "abc123456789extra"}],
+        }
+        mock_client.get_or_create_collection.return_value = mock_collection
+
+        mock_embedder = MagicMock()
+        mock_embedder.model = "nvidia/nv-embedqa-e5-v5"
+        mock_embedder.dim = 1024
+
+        from core.vectorstore import VectorStore
+        vs = VectorStore(persist_path="test_chroma", embedder=mock_embedder)
+        result = vs.list_documents()
+        assert len(result) == 1
+        assert result[0]["filename"] == "abc123456789....pdf"
+
+
+class TestVectorStoreAddWithFilename:
+    """Tests for the filename metadata in add() (F1 fix)."""
+
+    @patch("core.vectorstore.chromadb")
+    def test_add_stores_filename_in_metadata(self, mock_chromadb):
+        """add() stores filename in chunk metadata when provided."""
+        mock_client = MagicMock()
+        mock_chromadb.PersistentClient.return_value = mock_client
+
+        mock_collection = MagicMock()
+        mock_client.get_or_create_collection.return_value = mock_collection
+
+        mock_embedder = MagicMock()
+        mock_embedder.model = "nvidia/nv-embedqa-e5-v5"
+        mock_embedder.dim = 1024
+        mock_embedder.embed.return_value = [[0.1, 0.2]]
+
+        from core.vectorstore import VectorStore
+        vs = VectorStore(persist_path="test_chroma", embedder=mock_embedder)
+
+        chunks = [{"text": "chunk1", "page_num": 1}]
+        vs.add(chunks, doc_id="doc1", filename="report.pdf")
+
+        call_kwargs = mock_collection.add.call_args[1]
+        assert call_kwargs["metadatas"][0]["filename"] == "report.pdf"
+
+    @patch("core.vectorstore.chromadb")
+    def test_add_without_filename_defaults_empty(self, mock_chromadb):
+        """add() stores empty filename when not provided (backward compat)."""
+        mock_client = MagicMock()
+        mock_chromadb.PersistentClient.return_value = mock_client
+
+        mock_collection = MagicMock()
+        mock_client.get_or_create_collection.return_value = mock_collection
+
+        mock_embedder = MagicMock()
+        mock_embedder.model = "nvidia/nv-embedqa-e5-v5"
+        mock_embedder.dim = 1024
+        mock_embedder.embed.return_value = [[0.1, 0.2]]
+
+        from core.vectorstore import VectorStore
+        vs = VectorStore(persist_path="test_chroma", embedder=mock_embedder)
+
+        chunks = [{"text": "chunk1", "page_num": 1}]
+        vs.add(chunks, doc_id="doc1")
+
+        call_kwargs = mock_collection.add.call_args[1]
+        assert call_kwargs["metadatas"][0]["filename"] == ""

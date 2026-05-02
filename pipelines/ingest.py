@@ -78,7 +78,7 @@ def ingest_document(file_path, doc_id: str, filename: str, vectorstore, ocr_read
 
         pages = extract_document(str(file_path), ocr_reader)
         chunks = chunk_document(pages, doc_id)
-        vectorstore.add(chunks, doc_id)
+        vectorstore.add(chunks, doc_id, filename=filename)
 
         page_count = len({p["page_num"] for p in pages})
         return IngestResult(

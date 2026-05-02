@@ -159,3 +159,56 @@ class TestRunSummarizeMetadata:
 
         call_kwargs = mock_nim.chat.call_args[1]
         assert call_kwargs["model"] == "explicit-model"
+
+
+class TestRunSummarizeOpenAIErrorPropagation:
+    """F7 fix: openai API errors should propagate, not be swallowed."""
+
+    @patch("pipelines.summarize._count_tokens", return_value=100)
+    def test_rate_limit_error_propagates(self, mock_tokens):
+        import openai
+        mock_vs = MagicMock()
+        mock_vs.get_all_by_doc.return_value = [
+            {"text": "Some text.", "chunk_id": "c1", "doc_id": "doc1", "page_num": 1, "chunk_type": "text"},
+        ]
+        mock_nim = MagicMock()
+        mock_nim.chat.side_effect = openai.RateLimitError(
+            message="Rate limit exceeded",
+            response=MagicMock(status_code=429),
+            body=None,
+        )
+
+        with pytest.raises(openai.RateLimitError):
+            run_summarize("doc1", mock_vs, mock_nim)
+
+    @patch("pipelines.summarize._count_tokens", return_value=100)
+    def test_timeout_error_propagates(self, mock_tokens):
+        import openai
+        mock_vs = MagicMock()
+        mock_vs.get_all_by_doc.return_value = [
+            {"text": "Some text.", "chunk_id": "c1", "doc_id": "doc1", "page_num": 1, "chunk_type": "text"},
+        ]
+        mock_nim = MagicMock()
+        mock_nim.chat.side_effect = openai.APITimeoutError(request=MagicMock())
+
+        with pytest.raises(openai.APITimeoutError):
+            run_summarize("doc1", mock_vs, mock_nim)
+
+
+class TestRunSummarizeChunkCountOnError:
+    """F8 fix: chunk_count should reflect loaded chunks even on error."""
+
+    def test_preserves_chunk_count_on_non_api_error(self):
+        mock_vs = MagicMock()
+        mock_vs.get_all_by_doc.return_value = [
+            {"text": "Chunk one.", "chunk_id": "c1", "doc_id": "d1", "page_num": 1, "chunk_type": "text"},
+            {"text": "Chunk two.", "chunk_id": "c2", "doc_id": "d1", "page_num": 2, "chunk_type": "text"},
+            {"text": "Chunk three.", "chunk_id": "c3", "doc_id": "d1", "page_num": 3, "chunk_type": "text"},
+        ]
+        mock_nim = MagicMock()
+        mock_nim.chat.side_effect = RuntimeError("Some non-API error")
+
+        result = run_summarize("d1", mock_vs, mock_nim)
+
+        assert result.error is not None
+        assert result.chunk_count == 3  # Should reflect actual loaded chunks, not 0

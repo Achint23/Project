@@ -188,7 +188,7 @@ class TestRunQuery:
         result = run_query("What is the answer?", vs, nim)
 
         assert isinstance(result, QueryResult)
-        assert result.answer == llm_answer
+        assert result.answer == "The answer is here [1] and also [2]."
         assert len(result.citations) == 2
         assert result.citations[0]["chunk_id"] == "abc123_chunk_0"
         assert result.citations[0]["page_num"] == 1
@@ -350,3 +350,25 @@ class TestRunQueryMetadata:
 
         assert result.prompt_tokens == 0
         assert result.completion_tokens == 0
+
+
+class TestRunQueryCitationDeduplication:
+    """F4 fix: duplicate citations should be deduplicated by chunk_id."""
+
+    @patch("pipelines.query._load_prompt_template")
+    @patch("pipelines.query.retrieve")
+    def test_duplicate_valid_citations_deduplicated(self, mock_retrieve, mock_template):
+        mock_retrieve.return_value = SAMPLE_CHUNKS
+        mock_template.return_value = "Context: {context}\nQuestion: {question}"
+
+        # Same valid chunk cited three times
+        llm_answer = "See [abc123_chunk_0] and [abc123_chunk_0] and [abc123_chunk_0]."
+        nim = MagicMock()
+        nim.chat.return_value = _mock_llm_response(llm_answer)
+        vs = MagicMock()
+
+        result = run_query("Q?", vs, nim)
+
+        # Should only appear once in citations list
+        assert len(result.citations) == 1
+        assert result.citations[0]["chunk_id"] == "abc123_chunk_0"

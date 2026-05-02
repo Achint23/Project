@@ -10,7 +10,7 @@ from pipelines.query import QueryResult, run_query
 from routers.model_router import TaskType, route
 
 
-def _resolve_model(task: TaskType) -> tuple[str, str]:
+def _resolve_model(task: TaskType, doc_length: int = 0, chunk_count: int = 0) -> tuple[str, str]:
     """Resolve model name and route reason from session routing mode.
 
     Returns (model_name, route_reason).
@@ -21,7 +21,7 @@ def _resolve_model(task: TaskType) -> tuple[str, str]:
         return settings.nvidia_route_model, ""
     if mode == "large (direct)":
         return settings.nvidia_model, ""
-    decision = route(task, settings.nvidia_model, settings.nvidia_route_model)
+    decision = route(task, settings.nvidia_model, settings.nvidia_route_model, doc_length=doc_length, chunk_count=chunk_count)
     return decision.model, decision.reason
 
 
@@ -37,13 +37,13 @@ def _render_citations(citations: list[dict], hallucinated_ids: list[str]):
         return
 
     st.caption("📚 Sources:")
-    for cite in citations:
-        with st.expander(f"[{cite['chunk_id']}] — page {cite['page_num']}"):
+    for idx, cite in enumerate(citations, start=1):
+        with st.expander(f"[{idx}] — page {cite['page_num']}"):
             st.markdown(cite["text"])
 
     for hid in hallucinated_ids:
         st.warning(
-            f"⚠️ **[{hid}]** — Citation not found in retrieved chunks (possibly hallucinated)"
+            f"⚠️ Citation not found in retrieved chunks (possibly hallucinated)"
         )
 
 
@@ -73,7 +73,10 @@ def render_chat(vectorstore, nim_client):
 
         with st.chat_message("assistant"):
             try:
-                model, route_reason = _resolve_model(TaskType.QA)
+                # Compute routing signals from indexed documents
+                documents = st.session_state.get("documents", [])
+                total_chunks = sum(d.get("chunk_count", 0) for d in documents)
+                model, route_reason = _resolve_model(TaskType.QA, doc_length=len(question), chunk_count=total_chunks)
                 result = run_query(question, vectorstore, nim_client, model=model)
                 result.route_reason = route_reason
             except openai.RateLimitError:

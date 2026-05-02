@@ -75,6 +75,7 @@ def _render_agraph(extraction: GraphExtraction) -> None:
         directed=True,
         physics=True,
         hierarchical=False,
+        groups={},
     )
     agraph(nodes=nodes, edges=edges, config=config)
 
@@ -118,12 +119,14 @@ def render_graph_view(vectorstore, nim_client) -> None:
         try:
             settings = get_settings()
             mode = st.session_state.get("model_routing_mode", "auto")
+            selected_doc = next((d for d in documents if d["doc_id"] == selected_doc_id), {})
+            doc_chunk_count = selected_doc.get("chunk_count", 0)
             if mode == "small (route)":
                 model = settings.nvidia_route_model
             elif mode == "large (direct)":
                 model = settings.nvidia_model
             else:
-                decision = route(TaskType.GRAPH_EXTRACT, settings.nvidia_model, settings.nvidia_route_model)
+                decision = route(TaskType.GRAPH_EXTRACT, settings.nvidia_model, settings.nvidia_route_model, chunk_count=doc_chunk_count)
                 model = decision.model
 
             with st.status("Extracting graph data...", expanded=True) as status:

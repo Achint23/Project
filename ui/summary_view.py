@@ -30,12 +30,15 @@ def render_summary_view(vectorstore, nim_client) -> None:
             settings = get_settings()
             mode = st.session_state.get("model_routing_mode", "auto")
             route_reason = ""
+            # Compute routing signals from selected document
+            selected_doc = next((d for d in documents if d["doc_id"] == selected_doc_id), {})
+            doc_chunk_count = selected_doc.get("chunk_count", 0)
             if mode == "small (route)":
                 model = settings.nvidia_route_model
             elif mode == "large (direct)":
                 model = settings.nvidia_model
             else:
-                decision = route(TaskType.SUMMARY, settings.nvidia_model, settings.nvidia_route_model)
+                decision = route(TaskType.SUMMARY, settings.nvidia_model, settings.nvidia_route_model, chunk_count=doc_chunk_count)
                 model = decision.model
                 route_reason = decision.reason
 
