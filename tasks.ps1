@@ -14,9 +14,13 @@ param(
 
 function Invoke-Setup {
     uv sync
-    Write-Host "`n✓ Dependencies installed." -ForegroundColor Green
+    Write-Host "`nDependencies installed." -ForegroundColor Green
     Write-Host "  Downloading EasyOCR weights (first time only)..." -ForegroundColor Cyan
-    uv run python -c "import easyocr; easyocr.Reader(['en'], gpu=False)"
+    uv run python -c 'import easyocr; easyocr.Reader([''en''], gpu=False)'
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "EasyOCR bootstrap failed." -ForegroundColor Red
+        exit 1
+    }
     Write-Host "  EasyOCR weights downloaded." -ForegroundColor Green
     Write-Host "  Installing Playwright browsers..." -ForegroundColor Cyan
     uv run playwright install chromium
@@ -36,31 +40,32 @@ function Invoke-Clean {
             Remove-Item -Recurse -Force $dir
         }
     }
-    Write-Host "✓ Cleaned." -ForegroundColor Green
+    Write-Host "Cleaned." -ForegroundColor Green
 }
 
 function Invoke-Doctor {
     Write-Host "=== DocBot Environment Check ===" -ForegroundColor Cyan
-    uv run python -c @"
-from core.config import get_settings
-s = get_settings()
-print(f'  API Key  : {s.nvidia_api_key[:8]}...{s.nvidia_api_key[-4:]}')
-print(f'  Base URL : {s.nvidia_base_url}')
-print(f'  Model    : {s.nvidia_model}')
-print(f'  Route    : {s.nvidia_route_model}')
-print(f'  Embed    : {s.nvidia_embed_model}')
-"@
+    $configCheckScript = @(
+        'from core.config import get_settings',
+        's = get_settings()',
+        'print(f''  API Key  : {s.nvidia_api_key[:8]}...{s.nvidia_api_key[-4:]}'')',
+        'print(f''  Base URL : {s.nvidia_base_url}'')',
+        'print(f''  Model    : {s.nvidia_model}'')',
+        'print(f''  Route    : {s.nvidia_route_model}'')',
+        'print(f''  Embed    : {s.nvidia_embed_model}'')'
+    ) -join "`n"
+    uv run python -c $configCheckScript
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "✗ Config check failed. Is .env.local configured?" -ForegroundColor Red
+        Write-Host "Config check failed. Is .env.local configured?" -ForegroundColor Red
         exit 1
     }
     Write-Host "`n  Running NIM connectivity smoke test..." -ForegroundColor Cyan
     uv run pytest tests/test_smoke_nim.py::test_json_mode_roundtrip -x -q
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "✗ Smoke test failed." -ForegroundColor Red
+        Write-Host "Smoke test failed." -ForegroundColor Red
         exit 1
     }
-    Write-Host "`n✓ Doctor passed — environment is healthy." -ForegroundColor Green
+    Write-Host "`nDoctor passed - environment is healthy." -ForegroundColor Green
 }
 
 function Invoke-Test {
@@ -80,7 +85,7 @@ function Invoke-Demo {
         Start-Sleep -Seconds 1
     }
     if (-not $ready) {
-        Write-Host "✗ Streamlit server failed to start within 30s." -ForegroundColor Red
+        Write-Host "Streamlit server failed to start within 30s." -ForegroundColor Red
         if (-not $streamlitProcess.HasExited) { Stop-Process -Id $streamlitProcess.Id -Force }
         exit 1
     }
@@ -89,28 +94,26 @@ function Invoke-Demo {
     $testExit = $LASTEXITCODE
     if (-not $streamlitProcess.HasExited) { Stop-Process -Id $streamlitProcess.Id -Force }
     if ($testExit -ne 0) {
-        Write-Host "✗ E2E demo dry-run failed." -ForegroundColor Red
+        Write-Host "E2E demo dry-run failed." -ForegroundColor Red
         exit 1
     }
-    Write-Host "`n✓ E2E demo dry-run passed." -ForegroundColor Green
+    Write-Host "`nE2E demo dry-run passed." -ForegroundColor Green
 }
 
 function Show-Help {
-    Write-Host @"
-
-  DocBot Task Runner
-  ==================
-  Usage: .\tasks.ps1 <command>
-
-  Commands:
-    setup   Install dependencies (uv sync)
-    run     Launch Streamlit app
-    clean   Remove generated/cached files
-    doctor  Verify environment + NIM connectivity
-    test    Run all tests
-    demo    Run automated E2E demo dry-run (Playwright)
-
-"@ -ForegroundColor Cyan
+    Write-Host "" -ForegroundColor Cyan
+    Write-Host "  DocBot Task Runner" -ForegroundColor Cyan
+    Write-Host "  ==================" -ForegroundColor Cyan
+    Write-Host "  Usage: .\tasks.ps1 COMMAND" -ForegroundColor Cyan
+    Write-Host "" -ForegroundColor Cyan
+    Write-Host "  Commands:" -ForegroundColor Cyan
+    Write-Host "    setup   Install dependencies (uv sync)" -ForegroundColor Cyan
+    Write-Host "    run     Launch Streamlit app" -ForegroundColor Cyan
+    Write-Host "    clean   Remove generated/cached files" -ForegroundColor Cyan
+    Write-Host "    doctor  Verify environment + NIM connectivity" -ForegroundColor Cyan
+    Write-Host "    test    Run all tests" -ForegroundColor Cyan
+    Write-Host "    demo    Run automated E2E demo dry-run (Playwright)" -ForegroundColor Cyan
+    Write-Host "" -ForegroundColor Cyan
 }
 
 switch ($Command) {
